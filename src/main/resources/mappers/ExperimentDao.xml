@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simtop.dao.ExperimentDao">
+    <resultMap id="result" type="com.simtop.pojo.Experiment">
+        <id property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="experimentCode" column="experiment_code"/>
+        <result property="experimentStartTime" column="experiment_start_time"/>
+        <result property="experimentEndTime" column="experiment_end_time"/>
+        <result property="experimentName" column="experiment_name"/>
+        <association property="user" column="user_id" javaType="com.simtop.pojo.User">
+            <id property="id" column="tu.id"/>
+            <result property="username" column="username"/>
+        </association>
+        <association property="course" column="course_id" javaType="com.simtop.pojo.Course">
+            <id property="id" column="tc.id"/>
+            <result property="courseName" column="course_name"/>
+        </association>
+        <association property="experimentType" column="experiment_type_id" javaType="com.simtop.pojo.ExperimentType">
+            <id property="id" column="te.id"/>
+            <result property="experimentTypeName" column="experiment_type_name"/>
+        </association>
+
+    </resultMap>
+    <select id="checkExpCode" parameterType="string" resultType="int">
+        select count(1) from tb_experiment where experiment_code=#{expCode}
+    </select>
+    <insert id="insert" parameterType="com.simtop.pojo.Experiment">
+        insert into tb_experiment(course_name, create_time, update_time, username, experiment_code,
+        experiment_start_time, experiment_end_time, experiment_name)
+        values(#{courseName},now(),now(),#{username},#{experimentCode},#{experimentStartTime},#{experimentEndTime},
+        #{experimentName})
+
+    </insert>
+    <select id="selectAll" resultType="com.simtop.pojo.Experiment">
+        select id,experiment_code,username,experiment_name,course_name,
+        experiment_start_time, experiment_end_time from tb_experiment
+    </select>
+    <delete id="deleteById" parameterType="int">
+        delete from tb_experiment
+        where id=#{id}
+    </delete>
+
+    <select id="findByParams" parameterType="com.simtop.pojo.Experiment" resultType="com.simtop.pojo.Experiment">
+        select id,experiment_code,username,experiment_name,course_name,
+        experiment_start_time, experiment_end_time from tb_experiment
+        <where>
+            <if test="experimentCode!=null and experimentCode!=''">and experiment_code=#{experimentCode}</if>
+            <if test="courseName!=null and courseName!=''">and course_name=#{courseName}</if>
+            <if test="username!=null and username!=''">and username=#{username}</if>
+        </where>
+    </select>
+    <select id="findById" parameterType="int" resultType="com.simtop.pojo.Experiment">
+        select id,experiment_code,username,experiment_name,course_name,
+        experiment_start_time, experiment_end_time from tb_experiment
+        where id=#{id}
+    </select>
+
+</mapper>    
+  

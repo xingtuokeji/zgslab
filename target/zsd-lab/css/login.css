@@ -1,0 +1,4 @@
+/*登录页背景图片全屏自适应*/
+body{
+    background: url("../images/login.png") 50% 0 no-repeat;
+}

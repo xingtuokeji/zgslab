@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simtop.dao.ExperimentTypeDao">
+    <insert id="insertExperimentType" parameterType="com.simtop.pojo.ExperimentType">
+        insert into tb_experiment_type(experiment_type_name, create_time, update_time)
+        values (#{experimentTypeName},now(),now())
+    </insert>
+    <delete id="deleteById" parameterType="int">
+        delete from tb_experiment_type
+        where id=#{id}
+    </delete>
+    <select id="selectAll" resultType="com.simtop.pojo.ExperimentType">
+        select id,experiment_type_name,create_time,update_time
+        from tb_experiment_type
+    </select>
+    <select id="selectById" parameterType="int" resultType="com.simtop.pojo.ExperimentType">
+        select id,experiment_type_name,create_time,update_time
+        from tb_experiment_type
+        where id=#{id}
+    </select>
+    <update id="update" parameterType="com.simtop.pojo.ExperimentType">
+        update tb_experiment_type set experiment_type_name=#{experimentType}
+        where id=#{id}
+    </update>
+</mapper>    
+  
