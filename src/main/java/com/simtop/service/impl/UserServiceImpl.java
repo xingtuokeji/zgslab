@@ -28,11 +28,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
+    /**
+     * 注册业务逻辑类
+     * @param userVo
+     * @return
+     */
     @Override
     public ServerResponse<String> register(UserVo userVo) {
+        //保证验证码不能为空
         if(userVo.getCheckCode()==null || "".equals(userVo.getCheckCode())){
             return ServerResponse.createByErrorMsg("验证码不能为空");
         }
+        //前端传递的验证码和redis中的checkCode进行比对
         if(!userVo.getCheckCode().equals(redisTemplate.boundValueOps("email").get())){
             return ServerResponse.createByErrorMsg("验证码错误");
         }
@@ -60,9 +67,7 @@ public class UserServiceImpl implements UserService {
         user.setProvince(userVo.getProvince());
         user.setLoginName(userVo.getLoginName());
         user.setUsername(userVo.getUsername());
-        Role role = new Role();
-        role.setId(userVo.getRoleId());
-        user.setRoleId(role);
+        user.setRoleId(userVo.getRoleId());
         resultCount = userDao.insert(user);
         if(resultCount < 0){
             return ServerResponse.createByErrorMsg("用户注册失败");
@@ -70,22 +75,27 @@ public class UserServiceImpl implements UserService {
         return ServerResponse.createBySuccessMsg("注册成功");
     }
 
+    /**
+     * 邮箱注册验证码生成逻辑类
+     * @param email
+     * @return
+     */
     @Override
     public ServerResponse<String> checkCode(String email) {
         //邮箱非空验证
         if(email==null||"".equals(email)){
             return ServerResponse.createByErrorMsg("邮箱不能为空,请填入有效地址");
         }
-        //生成随机的验证码
+        //生成随机的6位数字验证码
         String verificationCode= SmsRandomCodeUtil.generateRandomSixNum();
         //调用邮箱发送
         SmsPojo smsPojo = new SmsPojo();
         smsPojo.setToAddress(email);
         smsPojo.setContent(smsPojo.getContent()+verificationCode);
         if(SmsUtil.sendTextMail(smsPojo)){
-            //发送成功保存邮箱地址对应的验证码 todo
+            //发送成功保存邮箱地址对应的验证码 todo 已解决
+            // redis中保存邮箱验证码三分钟
             redisTemplate.boundValueOps("email").set(verificationCode,180,TimeUnit.SECONDS);
-            System.out.println(redisTemplate.boundValueOps("email").get());
             return ServerResponse.createBySuccess(verificationCode);
         }else{
             return ServerResponse.createByErrorMsg("邮件发送失败");
@@ -124,9 +134,7 @@ public class UserServiceImpl implements UserService {
     public ServerResponse<String> insertBackUser(UserVo userVo) {
         // vo <- pojo
         User user = new User();
-        Role role = new Role();
-        role.setId(userVo.getRoleId());
-        user.setRoleId(role);
+        user.setRoleId(userVo.getRoleId());
         user.setLoginName(userVo.getLoginName());
         user.setPassword(userVo.getPassword());
         user.setUsername(userVo.getUsername());
@@ -158,9 +166,7 @@ public class UserServiceImpl implements UserService {
     public ServerResponse<String> updateBackendUser(UserVo userVo) {
         // vo <- pojo
         User user = new User();
-        Role role = new Role();
-        role.setId(userVo.getRoleId());
-        user.setRoleId(role);
+        user.setRoleId(userVo.getRoleId());
         user.setLoginName(userVo.getLoginName());
         user.setPassword(userVo.getPassword());
         user.setUsername(userVo.getUsername());

@@ -25,6 +25,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     @Autowired
     private ExperimentDao experimentDao;
 
+    //从token中获取 todo
     @Override
     public ServerResponse<String> add(Experiment experiment) {
         String expCode = redisTemplate.boundValueOps("expCode").get().toString();
@@ -70,6 +71,8 @@ public class ExperimentServiceImpl implements ExperimentService {
         return ServerResponse.createBySuccessMsg("删除实验数据成功");
     }
 
+
+    //todo
     @Override
     public ServerResponse<List<Experiment>> findByParams(Experiment experiment) {
         List<Experiment> experimentList = experimentDao.findByParams(experiment);

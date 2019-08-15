@@ -2,9 +2,12 @@ package com.simtop.vo;
 
 import java.util.Date;
 
+/**
+ * 对应注册页面中的字段
+ */
 public class UserVo {
     private String email;
-    private String checkCode;
+    private String checkCode;//邮箱验证码
     private String newPassword;
     private String confirmPassword;
 

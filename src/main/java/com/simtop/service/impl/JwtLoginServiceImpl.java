@@ -28,6 +28,7 @@ public class JwtLoginServiceImpl implements JwtLoginService {
         if(u.getPassword().equals(user.getPassword())){
             //使用JWT加密生成token todo
             u.setPassword(StringUtils.EMPTY);//置空密码
+            System.out.println(u);
             String token = JwtUtil.sign(u,60L*1000L*60L);//token有效期1小时
             return token;
         }

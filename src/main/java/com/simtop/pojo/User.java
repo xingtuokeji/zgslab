@@ -1,23 +1,29 @@
 package com.simtop.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.util.Date;
 
+/**
+ * 用户类
+ */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+//属性为空或者NULL都不序列化
 public class User {
     private Integer id;//主键id
     private String username;//用户名
     private String loginName;//登录名
     private String password;//登陆密码
-    private String mobile;//手机号
     private String email;//邮箱
-    private Role roleId;//角色id
+    private Role role;//角色 复合类型
+    private Integer roleId;//角色id
     private Date createTime;//创建时间
     private Date updateTime;//更新时间
     private String school;//学校
     private String province;//省份
     private String city;//城市
-
     private String address;//所在地
-
+    // important 验证码不存入数据库，存入redis
 
     public String getAddress() {
         return address;
@@ -93,14 +99,6 @@ public class User {
         this.password = password;
     }
 
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -109,11 +107,20 @@ public class User {
         this.email = email;
     }
 
-    public Role getRoleId() {
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Role roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 
@@ -140,8 +147,8 @@ public class User {
                 ", username='" + username + '\'' +
                 ", loginName='" + loginName + '\'' +
                 ", password='" + password + '\'' +
-                ", mobile='" + mobile + '\'' +
                 ", email='" + email + '\'' +
+                ", role=" + role +
                 ", roleId=" + roleId +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +

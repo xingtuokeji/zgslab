@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simtop.dao.QuestionDao">
+    <resultMap id="result" type="com.simtop.pojo.Question">
+        <id column="tq.id" property="id"/>
+        <result property="username" column="username"/>
+        <result property="school" column="school"/>
+        <result property="question" column="question"/>
+        <result property="createTime" column="create_time"/>
+        <collection property="comments" column="id" ofType="com.simtop.pojo.Comment">
+            <id property="id" column="tc.id"/>
+            <result property="comment" column="comment"/>
+            <result property="questionId" column="question_id"/>
+        </collection>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.simtop.pojo.Question">
+        insert into tb_question(username, school, question, is_answer, create_time, update_time)
+        values (#{username},#{school},#{question},#{isAnswer},now(),now())
+    </insert>
+
+    <select id="selectById" parameterType="int" resultType="com.simtop.pojo.Question">
+        select id,username,school,question,is_answer,create_time,update_time
+        from tb_question
+        where id=#{id}
+    </select>
+
+    <select id="selectAll" parameterType="int" resultMap="result">
+        select tq.id 'tq.id',tq.question,tq.school,tq.create_time,tc.id 'tc.id',tc.comment
+        from tb_question tq left join tb_comment tc
+        on tq.id=tc.question_id where tq.id=#{id}
+    </select>
+
+    <select id="selectByParams" parameterType="com.simtop.pojo.Question" resultType="com.simtop.pojo.Question">
+        select id,username,school,question,is_answer,create_time
+        from tb_question
+        <where>
+            <if test="username!=null and username!=''">and username like concat(concat('%',#{username}))</if>
+            <if test="school!=null and school!=''">and school like concat('%',concat(#{school},'%'))</if>
+            <if test="question!=null and question!=''">and question like concat('%',concat(#{question},'%'))</if>
+        </where>
+    </select>
+
+    <delete id="deleteById" parameterType="int">
+        delete from tb_question
+        where id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.simtop.pojo.Question">
+        update tb_question set question=#{question},update_time=now()
+        where id=#{id}
+    </update>
+</mapper>    
+  

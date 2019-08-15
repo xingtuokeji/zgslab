@@ -2,8 +2,12 @@ package com.simtop.pojo;
 
 import java.util.Date;
 
+/**
+ * 用户角色实体类
+ */
 public class Role {
-    private Integer id;//主键 角色id
+    //主键 角色id 1管理员 2专家 3学生 4学生
+    private Integer id;
     private String roleName;//角色名称
     private Integer roleType;//角色类别
     private Date createTime;//创建时间

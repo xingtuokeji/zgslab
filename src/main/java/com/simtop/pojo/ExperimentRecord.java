@@ -6,6 +6,7 @@ import java.util.Date;
  * 实验记录表
  */
 public class ExperimentRecord {
+    //试验记录id
     private Integer id;
     //学生名称
     private String username;
@@ -17,10 +18,20 @@ public class ExperimentRecord {
     private String experimentName;
     //创建时间
     private Date createTime;
+    //最后一次更新时间
+    private Date updateTime;
     //时长
-    private Date time;
+    private Integer time;
     //得分
     private Double score;
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Integer getId() {
         return id;
@@ -70,11 +81,11 @@ public class ExperimentRecord {
         this.createTime = createTime;
     }
 
-    public Date getTime() {
+    public Integer getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Integer time) {
         this.time = time;
     }
 
@@ -95,6 +106,7 @@ public class ExperimentRecord {
                 ", courseName='" + courseName + '\'' +
                 ", experimentName='" + experimentName + '\'' +
                 ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
                 ", time=" + time +
                 ", score=" + score +
                 '}';

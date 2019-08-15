@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 课程管理
+ * 课程管理 1、生成课程码 2、添加课程
  */
 @Controller
 @RequestMapping("/experiment")
@@ -26,6 +26,7 @@ public class ExperimentController {
 
     @Autowired
     private ExperimentService experimentService;
+
 
     /**
      * 产生实验码，不重复，先保存在redis内存中10分钟
@@ -38,11 +39,6 @@ public class ExperimentController {
         String token = request.getHeader("Authorization");
         if(token==null){
             return ServerResponse.createByErrorMsg("token已过期");
-        }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User user = JwtUtil.unsign(jwt, User.class);
-        if(user==null){
-            return ServerResponse.createByErrorMsg("token错误");
         }
         return experimentService.generateExpCode();
     }
@@ -61,11 +57,6 @@ public class ExperimentController {
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
         }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User user = JwtUtil.unsign(jwt, User.class);
-        if(user==null){
-            return ServerResponse.createByErrorMsg("token错误");
-        }
         return experimentService.add(experiment);
     }
 
@@ -81,11 +72,6 @@ public class ExperimentController {
         String token = request.getHeader("Authorization");
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
-        }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User user = JwtUtil.unsign(jwt, User.class);
-        if(user==null){
-            return ServerResponse.createByErrorMsg("token错误");
         }
         return experimentService.findAll();
     }
@@ -104,11 +90,6 @@ public class ExperimentController {
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
         }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User user = JwtUtil.unsign(jwt, User.class);
-        if(user==null){
-            return ServerResponse.createByErrorMsg("token错误");
-        }
         return experimentService.deleteById(id);
     }
 
@@ -126,11 +107,6 @@ public class ExperimentController {
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
         }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User user = JwtUtil.unsign(jwt, User.class);
-        if(user==null){
-            return ServerResponse.createByErrorMsg("token错误");
-        }
         return experimentService.findByParams(experiment);
     }
 
@@ -141,11 +117,6 @@ public class ExperimentController {
         String token = request.getHeader("Authorization");
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
-        }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User user = JwtUtil.unsign(jwt, User.class);
-        if(user==null){
-            return ServerResponse.createByErrorMsg("token错误");
         }
         return experimentService.findById(id);
     }

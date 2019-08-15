@@ -1,15 +1,20 @@
 package com.simtop.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simtop.pojo.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
 
+    //加密字符串
     private static final String SECRET = "XX#$%()(#*!()!KL<><MQLMNQNQJQK sdfkjsdrow32234545fdf>?N<:{LWPW";
+    //过期时间ms
     private static final String EXP = "exp";
     private static final String PAYLOAD = "payload";
 
@@ -19,8 +24,30 @@ public class JwtUtil {
             final JWTSigner signer = new JWTSigner(SECRET);
             final Map<String, Object> claims = new HashMap<String, Object>();
             ObjectMapper mapper = new ObjectMapper();
+            //值拆开 todo 搞定了
             String jsonString = mapper.writeValueAsString(object);
-            claims.put(PAYLOAD, jsonString);
+            System.out.println(jsonString);
+//            claims.put(PAYLOAD, jsonString);
+            //返回数据给前端
+            JSONObject jsonObject = JSON.parseObject(jsonString);
+            String username = jsonObject.getString("username");
+            Integer id = jsonObject.getInteger("id");
+            String loginName = jsonObject.getString("loginName");
+            Integer roleId = Integer.valueOf(jsonObject.getString("roleId"));
+            /**
+             * json字符串
+             * {
+             *   "id": 16,
+             *   "exp": 1565677098148,
+             *   "roleId": "1",
+             *   "loginName": "zhanghua",
+             *   "username": "张华"
+             * }
+             */
+            claims.put("id",id);
+            claims.put("username",username);
+            claims.put("loginName",loginName);
+            claims.put("roleId",roleId);
             claims.put(EXP, System.currentTimeMillis() + maxAge);
             return signer.sign(claims);
         } catch(Exception e) {
@@ -28,16 +55,26 @@ public class JwtUtil {
         }
     }
 
-    //解密，传入一个加密后的token字符串和解密后的类型
+    //解密，传入一个加密后的token字符串和解密后的类型 todo 解密
     public static<T> T unsign(String jwt, Class<T> classT) {
         final JWTVerifier verifier = new JWTVerifier(SECRET);
         try {
             final Map<String,Object> claims= verifier.verify(jwt);
-            if (claims.containsKey(EXP) && claims.containsKey(PAYLOAD)) {
+            if (claims.containsKey(EXP)) {
                 long exp = (Long)claims.get(EXP);
                 long currentTimeMillis = System.currentTimeMillis();
                 if (exp > currentTimeMillis) {
-                    String json = (String)claims.get(PAYLOAD);
+                    String username = (String)claims.get("username");
+                    Integer id = (Integer) claims.get("id");
+                    String loginName = (String) claims.get("loginName");
+                    Integer roleId = (Integer) claims.get("roleId");
+                    User user = new User();
+                    user.setId(id);
+                    user.setUsername(username);
+                    user.setLoginName(loginName);
+                    user.setRoleId(roleId);
+                    //todo 封装成json字符串
+                    String json = JSONObject.toJSONString(user);
                     ObjectMapper objectMapper = new ObjectMapper();
                     return objectMapper.readValue(json, classT);
                 }

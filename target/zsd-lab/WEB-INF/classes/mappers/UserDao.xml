@@ -11,7 +11,6 @@
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="loginName" column="login_name"/>
-        <result property="mobile" column="mobile"/>
         <result property="school" column="school"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
@@ -31,10 +30,10 @@
     </select>
     <insert id="insert" parameterType="com.simtop.pojo.User">
         insert into tb_user(username, login_name, password,email, role_id, create_time, update_time,school,province,city)
-        values (#{username},#{loginName},#{password},#{email},#{roleId.id},now(),now(),#{school},#{province},#{city})
+        values (#{username},#{loginName},#{password},#{email},#{roleId},now(),now(),#{school},#{province},#{city})
     </insert>
     <select id="checkLoginNameOrEmail" parameterType="map" resultType="com.simtop.pojo.User">
-        select id,username,login_name,password,mobile,email,role_id,create_time,update_time,
+        select id,username,login_name,password,email,role_id,create_time,update_time,
         school,province,city from tb_user
         where login_name=#{loginName} or email=#{email}
     </select>
@@ -44,12 +43,12 @@
     </update>
 
     <select id="selectAll" resultMap="result">
-        select tu.id 'tu.id',tu.username,tu.login_name,tu.password,tu.mobile,tu.email,tr.id 'tr.id',tu.create_time,tu.update_time,
+        select tu.id 'tu.id',tu.username,tu.login_name,tu.password,tu.email,tr.id 'tr.id',tu.create_time,tu.update_time,
         tu.school,tu.province,tu.city,tu.address from tb_user tu left join tb_role tr on tu.role_id=tr.id
     </select>
 
     <select id="selectByParams" parameterType="com.simtop.pojo.User" resultMap="result">
-        select tu.id 'tu.id',tu.username,tu.login_name,tu.password,tu.mobile,tu.email,tr.id 'tr.id',tu.create_time,tu.update_time,
+        select tu.id 'tu.id',tu.username,tu.login_name,tu.password,tu.email,tr.id 'tr.id',tu.create_time,tu.update_time,
         tu.school,tu.province,tu.city,tu.address from tb_user tu left join tb_role tr on tu.role_id=tr.id
         <where>
             <if test="username!=null and username!=''">and username like concat(concat('%',#{username}),'%')</if>
@@ -59,7 +58,7 @@
     </select>
 
     <insert id="insertBackUser" parameterType="com.simtop.pojo.User">
-        insert into tb_user(username, login_name, password, mobile, email, role_id, create_time, update_time, school,address)
+        insert into tb_user(username, login_name, password, email, role_id, create_time, update_time, school,address)
         values (#{username},#{loginName},#{password},null,#{email},#{roleId.id},now(),now(),#{school},#{address})
     </insert>
 

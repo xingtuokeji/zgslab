@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simtop.dao.U3DExpRecordDao">
+    <insert id="insertExpRecord" parameterType="com.simtop.pojo.U3DExpRecord">
+        insert into tb_u3d_web_exp_record(experiment_id, park_browsing, smart_storage_browsing,
+        device_awareness, order_processing, pick_by_order, pick_by_batch_order, pick_by_disperse,
+        shipping_operation, sorting_operation, total_score, create_time, update_time,user_id)
+        values (#{experimentRecordId},#{parkBrowsing},#{SmartStorageBrowsing},#{DeviceAwareness},#{OrderProcessing},#{PickByOrder},
+        #{PickByBatchOrder},#{PickByDisperse},#{ShippingOperation},#{SortingOperation},#{TotalScore},now(),now(),#{userId})
+    </insert>
+
+    <select id="findById" parameterType="int" resultType="com.simtop.pojo.U3DExpRecord">
+        select id,experiment_id, park_browsing, smart_storage_browsing,
+        device_awareness, order_processing, pick_by_order, pick_by_batch_order, pick_by_disperse,
+        shipping_operation, sorting_operation, total_score, create_time, update_time,user_id
+        from tb_u3d_web_exp_record where experiment_id=#{experimentId}
+    </select>
+
+</mapper>    
+  

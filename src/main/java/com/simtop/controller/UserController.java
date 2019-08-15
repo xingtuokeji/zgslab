@@ -1,11 +1,9 @@
 package com.simtop.controller;
 
 import com.simtop.common.ServerResponse;
-import com.simtop.pojo.Role;
 import com.simtop.pojo.User;
 import com.simtop.service.JwtLoginService;
 import com.simtop.service.UserService;
-import com.simtop.util.JwtUtil;
 import com.simtop.vo.UserParamsVo;
 import com.simtop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * 用户门户管理器
+ */
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     /**
-     * 注册时获取后台生成的验证码
+     * 注册时 1、获取后台生成的验证码
      * @return
      */
     @RequestMapping(value = "/checkCode.do",method = RequestMethod.GET)
@@ -50,6 +51,7 @@ public class UserController {
     }
     /**
      * 用户登录 成功后给前台返回一个token,后面需要拿这个token去验证
+     * 前台传入
      * @param userVo
      * @return
      */
@@ -57,10 +59,11 @@ public class UserController {
     @ResponseBody
     public ServerResponse<String> login(UserVo userVo){
         User user = new User();
-        Role role = new Role();
-        role.setId(userVo.getRoleId());
-        user.setRoleId(role);
+        //角色id
+        user.setRoleId(userVo.getRoleId());
+        //登录名
         user.setLoginName(userVo.getLoginName());
+        //登陆密码
         user.setPassword(userVo.getPassword());
         String token = jwtLoginService.login(user);
         if(token==null||"".equals(token)){
@@ -101,13 +104,6 @@ public class UserController {
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
         }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        System.out.println(jwt);
-        User user = JwtUtil.unsign(jwt, User.class);
-        System.out.println(user);
-        if(!userId.equals(user.getId())){
-            return ServerResponse.createByErrorMsg("token错误");
-        }
         return userService.findAll();
     }
     /**
@@ -120,13 +116,6 @@ public class UserController {
         String token = request.getHeader("Authorization");
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
-        }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        System.out.println(jwt);
-        User user = JwtUtil.unsign(jwt, User.class);
-        System.out.println(user);
-        if(!userId.equals(user.getId())){
-            return ServerResponse.createByErrorMsg("token错误");
         }
         return userService.insertBackUser(userVo);
     }
@@ -143,13 +132,6 @@ public class UserController {
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
         }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        System.out.println(jwt);
-        User user = JwtUtil.unsign(jwt, User.class);
-        System.out.println(user);
-        if(!userId.equals(user.getId())){
-            return ServerResponse.createByErrorMsg("token错误");
-        }
         return userService.deleteByUserId(id);
     }
 
@@ -160,13 +142,6 @@ public class UserController {
         String token = request.getHeader("Authorization");
         if(token == null){
             return ServerResponse.createByErrorMsg("token已过期");
-        }
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        System.out.println(jwt);
-        User user = JwtUtil.unsign(jwt, User.class);
-        System.out.println(user);
-        if(!userId.equals(user.getId())){
-            return ServerResponse.createByErrorMsg("token错误");
         }
         return userService.updateBackendUser(userVo);
     }
