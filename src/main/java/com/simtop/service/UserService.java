@@ -11,7 +11,7 @@ public interface UserService {
 
     ServerResponse<String> register(UserVo userVo);
 
-    ServerResponse<String> checkCode(String email);
+    ServerResponse<String> generateCheckCode(String email);
 
     ServerResponse<String> updatePassword(UserVo userVo);
 

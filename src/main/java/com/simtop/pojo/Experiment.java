@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 课程表实体类
+ * 课程表实体类  实验数据：课程管理
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Experiment {

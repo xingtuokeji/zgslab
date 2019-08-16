@@ -18,4 +18,6 @@ public interface ExperimentDao {
     List<Experiment> findByParams(Experiment experiment);
 
     Experiment findById(Integer id);
+
+    int updateById(Experiment experiment);
 }

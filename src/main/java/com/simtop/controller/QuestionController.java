@@ -15,13 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * 实验问题
+ */
 @Controller
 @RequestMapping("/question")
 public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
-
 
     /**
      * 添加问题
@@ -37,6 +39,25 @@ public class QuestionController {
             return ServerResponse.createByErrorMsg("token错误");
         }
         return questionService.add(question);
+    }
+
+    /**
+     * 默认分页显示所有的问题
+     */
+    @RequestMapping(value = "/findAll",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo<Question>> findAll(HttpServletRequest request,Integer pageNum,Integer pageSize){
+        String token = request.getHeader("Authorization");
+        if(token==null){
+            return ServerResponse.createByErrorMsg("token错误");
+        }
+        if(ObjectUtils.isEmpty(pageNum)){
+            pageNum = 1;
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<Question> questionList = questionService.findAll();
+        PageInfo<Question> pageInfo = new PageInfo<>(questionList);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 
     /**

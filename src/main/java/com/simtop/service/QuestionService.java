@@ -17,4 +17,6 @@ public interface QuestionService {
     ServerResponse<String> deleteById(Integer id);
 
     ServerResponse<String> updateById(Question question);
+
+    List<Question> findAll();
 }

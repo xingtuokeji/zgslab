@@ -1,5 +1,6 @@
 package com.simtop.service.impl;
 
+import com.simtop.common.ServerResponse;
 import com.simtop.dao.UserDao;
 import com.simtop.pojo.User;
 import com.simtop.service.JwtLoginService;
@@ -18,11 +19,11 @@ public class JwtLoginServiceImpl implements JwtLoginService {
     private UserDao userDao;
 
     @Override
-    public String login(User user) {
+    public ServerResponse<String> login(User user) {
         //验证成功返回token
         User u = userDao.checkLoginNameOrEmail(user.getLoginName(),user.getEmail());
         if(u == null){
-            return null;
+            return ServerResponse.createByErrorMsg("登录名不存在");
         }
         //如果登陆成功
         if(u.getPassword().equals(user.getPassword())){
@@ -30,8 +31,8 @@ public class JwtLoginServiceImpl implements JwtLoginService {
             u.setPassword(StringUtils.EMPTY);//置空密码
             System.out.println(u);
             String token = JwtUtil.sign(u,60L*1000L*60L);//token有效期1小时
-            return token;
+            return ServerResponse.createBySuccess(token);
         }
-        return null;
+        return ServerResponse.createByErrorMsg("登陆密码错误");
     }
 }

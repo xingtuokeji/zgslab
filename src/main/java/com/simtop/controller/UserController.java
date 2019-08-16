@@ -47,10 +47,11 @@ public class UserController {
     @ResponseBody
     public ServerResponse<String> sendEmailCode(String email){
         //根据邮箱获取验证码
-        return userService.checkCode(email);
+        return userService.generateCheckCode(email);
     }
     /**
      * 用户登录 成功后给前台返回一个token,后面需要拿这个token去验证
+     *
      * 前台传入
      * @param userVo
      * @return
@@ -65,16 +66,11 @@ public class UserController {
         user.setLoginName(userVo.getLoginName());
         //登陆密码
         user.setPassword(userVo.getPassword());
-        String token = jwtLoginService.login(user);
-        if(token==null||"".equals(token)){
-            return ServerResponse.createByError();
-        }
-        System.out.println("登陆成功后生成的token为："+token);
-        return ServerResponse.createBySuccess(token);
+        return jwtLoginService.login(user);
     }
 
     /**
-     * 忘记密码时获取验证码邮箱验证码
+     * 忘记密码时获取验证码 邮箱验证码
      *
      */
     @RequestMapping(value = "/forget_checkCode.do",method = RequestMethod.GET)
@@ -158,6 +154,5 @@ public class UserController {
             return ServerResponse.createByErrorMsg("token已过期");
         }
        return userService.findByParams(params);
-
     }
 }

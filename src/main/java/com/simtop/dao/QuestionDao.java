@@ -17,4 +17,7 @@ public interface QuestionDao {
     int deleteById(Integer id);
 
     int update(Question question);
+
+    List<Question> findAll();
+
 }

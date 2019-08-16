@@ -1,8 +1,9 @@
 package com.simtop.service;
 
+import com.simtop.common.ServerResponse;
 import com.simtop.pojo.User;
 
 public interface JwtLoginService {
 
-    String login(User user);
+    ServerResponse<String> login(User user);
 }

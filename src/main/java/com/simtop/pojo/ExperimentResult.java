@@ -12,41 +12,26 @@ public class ExperimentResult {
     //实验记录id
     private Integer experimentId;
     //实验类别id
-    private Integer experimentTypeId; //和实验方式表关联
-    //实验方式id 1摘取式 2播种式 3摘播式
     private Integer experimentMethodId;
+    //实验方式id 1摘取式 2播种式 3摘播式
     //用户id
     private Integer userId;
-    //总的拣货时长
-    private String totalPickTime;
-    //订单数量
-    private Integer orderNumber;
-    //工作时长
-    private String workTime;
+    //总的拣货时长 s
+    private double totalPickTime;
+    //有效时长
+    private double effectiveTime;
+    //效率
+    private double efficiency;
+    //工作步数
+    private int walkStep;
+    //第几次实验
+    private int experimentTimes;
+    //作业人员
+    private String worker;
     //创建时间
     private Date createTime;
     //最后一次更新时间
     private Date updateTime;
-    //最大货物数量
-    private Integer maxGoodsNum;
-    //货物品项
-    private Integer goodsItem;
-
-    public Integer getMaxGoodsNum() {
-        return maxGoodsNum;
-    }
-
-    public void setMaxGoodsNum(Integer maxGoodsNum) {
-        this.maxGoodsNum = maxGoodsNum;
-    }
-
-    public Integer getGoodsItem() {
-        return goodsItem;
-    }
-
-    public void setGoodsItem(Integer goodsItem) {
-        this.goodsItem = goodsItem;
-    }
 
     public Integer getId() {
         return id;
@@ -62,14 +47,6 @@ public class ExperimentResult {
 
     public void setExperimentId(Integer experimentId) {
         this.experimentId = experimentId;
-    }
-
-    public Integer getExperimentTypeId() {
-        return experimentTypeId;
-    }
-
-    public void setExperimentTypeId(Integer experimentTypeId) {
-        this.experimentTypeId = experimentTypeId;
     }
 
     public Integer getExperimentMethodId() {
@@ -88,28 +65,52 @@ public class ExperimentResult {
         this.userId = userId;
     }
 
-    public String getTotalPickTime() {
+    public double getTotalPickTime() {
         return totalPickTime;
     }
 
-    public void setTotalPickTime(String totalPickTime) {
+    public void setTotalPickTime(double totalPickTime) {
         this.totalPickTime = totalPickTime;
     }
 
-    public Integer getOrderNumber() {
-        return orderNumber;
+    public double getEffectiveTime() {
+        return effectiveTime;
     }
 
-    public void setOrderNumber(Integer orderNumber) {
-        this.orderNumber = orderNumber;
+    public void setEffectiveTime(double effectiveTime) {
+        this.effectiveTime = effectiveTime;
     }
 
-    public String getWorkTime() {
-        return workTime;
+    public double getEfficiency() {
+        return efficiency;
     }
 
-    public void setWorkTime(String workTime) {
-        this.workTime = workTime;
+    public void setEfficiency(double efficiency) {
+        this.efficiency = efficiency;
+    }
+
+    public int getWalkStep() {
+        return walkStep;
+    }
+
+    public void setWalkStep(int walkStep) {
+        this.walkStep = walkStep;
+    }
+
+    public int getExperimentTimes() {
+        return experimentTimes;
+    }
+
+    public void setExperimentTimes(int experimentTimes) {
+        this.experimentTimes = experimentTimes;
+    }
+
+    public String getWorker() {
+        return worker;
+    }
+
+    public void setWorker(String worker) {
+        this.worker = worker;
     }
 
     public Date getCreateTime() {
@@ -133,16 +134,16 @@ public class ExperimentResult {
         return "ExperimentResult{" +
                 "id=" + id +
                 ", experimentId=" + experimentId +
-                ", experimentTypeId=" + experimentTypeId +
                 ", experimentMethodId=" + experimentMethodId +
                 ", userId=" + userId +
-                ", totalPickTime='" + totalPickTime + '\'' +
-                ", orderNumber=" + orderNumber +
-                ", workTime='" + workTime + '\'' +
+                ", totalPickTime=" + totalPickTime +
+                ", effectiveTime=" + effectiveTime +
+                ", efficiency=" + efficiency +
+                ", walkStep=" + walkStep +
+                ", experimentTimes=" + experimentTimes +
+                ", worker='" + worker + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
-                ", maxGoodsNum=" + maxGoodsNum +
-                ", goodsItem=" + goodsItem +
                 '}';
     }
 }

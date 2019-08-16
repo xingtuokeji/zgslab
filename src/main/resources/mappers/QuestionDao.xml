@@ -52,5 +52,10 @@
         update tb_question set question=#{question},update_time=now()
         where id=#{id}
     </update>
+
+    <select id="findAll" resultType="com.simtop.pojo.Question">
+        select id,username,school,question,is_answer,create_time,update_time
+        from tb_question
+    </select>
 </mapper>    
   

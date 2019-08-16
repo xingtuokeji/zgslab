@@ -4,10 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.simtop.dao.ExperimentResultDao">
     <insert id="insert" parameterType="com.simtop.pojo.ExperimentResult">
-        insert into tb_u3d_web_exp_result(experiment_id, experiment_type_id, experiment_method_id, user_id,
-        total_pick_time, order_number, work_time, create_time, update_time, goods_item, max_goods_num)
-        values (#{experimentId},#{experimentTypeId},#{experimentMethodId},#{userId},#{totalPickTime},#{orderNumber},
-        #{workTime},now(),now(),#{goodsItem},#{maxGoodsNum})
+        insert into tb_u3d_web_exp_result(experiment_id, experiment_method_id, user_id, total_pick_time,
+        effective_time, create_time, update_time, efficiency, walk_step, experiment_times, worker)
+        values (#{experimentId},#{experimentMethodId},#{userId},#{totalPickTime},#{effectiveTime},now(),now(),#{efficiency},#{walkStep},
+        #{experimentTimes},#{worker})
     </insert>
 </mapper>    
   

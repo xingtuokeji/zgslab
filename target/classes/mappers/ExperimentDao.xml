@@ -26,9 +26,9 @@
         select id,experiment_code,username,experiment_name,course_name,
         experiment_start_time, experiment_end_time from tb_experiment
         <where>
-            <if test="experimentCode!=null and experimentCode!=''">and experiment_code=#{experimentCode}</if>
-            <if test="courseName!=null and courseName!=''">and course_name=#{courseName}</if>
-            <if test="username!=null and username!=''">and username=#{username}</if>
+            <if test="experimentCode!=null and experimentCode!=''">and experiment_code like concat(concat('%',#{experimentCode}),'%')</if>
+            <if test="courseName!=null and courseName!=''">and course_name like concat(concat('%',#{courseName}),'%')</if>
+            <if test="username!=null and username!=''">and username like concat(concat('%',#{username}),'%')</if>
         </where>
     </select>
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.Experiment">
@@ -36,6 +36,15 @@
         experiment_start_time, experiment_end_time from tb_experiment
         where id=#{id}
     </select>
+
+    <update id="updateById" parameterType="com.simtop.pojo.Experiment">
+        update tb_experiment
+        <set>
+            <if test="courseName!=null and courseName!=''">course_name=#{courseName},</if>
+            update_time=now()
+        </set>
+        where id=#{id}
+    </update>
 
 </mapper>    
   

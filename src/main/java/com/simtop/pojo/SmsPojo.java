@@ -19,7 +19,7 @@ public class SmsPojo {
     // 是否需要身份验证
     private static boolean validate = true;
     // 邮件主题
-    private static String subject = "注册验证码";
+    private static String subject = "验证码：";
     // 邮件的文本内容
     private static String content = "六位注册验证码为：";
 

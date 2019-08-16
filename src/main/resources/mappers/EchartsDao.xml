@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simtop.dao.EchartsDao">
+    <select id="selectEightProUser" resultType="com.simtop.pojo.Echarts">
+        select province,count(*) as count from tb_user group by province order by count desc limit 8
+    </select>
+    <select id="selectRoleUser" resultType="com.simtop.pojo.Echarts2">
+        select tr.role_name as name,count(*) as value from tb_user tu left join tb_role tr
+        ON tu.role_id=tr.id where tu.role_id!=1 group by role_id  order by value desc;
+    </select>
+
+    <select id="selectScoreUser" resultType="com.simtop.pojo.Echarts3">
+        select distinct
+        (select  count(test) FROM tb_user where test>=90) c1,
+        (select  count(test) FROM tb_user where test>=80 and test&lt;90) c2,
+        (select  count(test) FROM tb_user where test>=70 and test&lt;80) c3,
+        (select  count(test) FROM tb_user where test>=60 and test&lt;70) c4,
+        (select  count(test) FROM tb_user where test>=0 and test&lt;60) c5
+        from tb_user
+    </select>
+
+</mapper>    
+  

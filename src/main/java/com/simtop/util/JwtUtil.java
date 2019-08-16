@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
-
     //加密字符串
     private static final String SECRET = "XX#$%()(#*!()!KL<><MQLMNQNQJQK sdfkjsdrow32234545fdf>?N<:{LWPW";
     //过期时间ms
@@ -24,7 +23,7 @@ public class JwtUtil {
             final JWTSigner signer = new JWTSigner(SECRET);
             final Map<String, Object> claims = new HashMap<String, Object>();
             ObjectMapper mapper = new ObjectMapper();
-            //值拆开 todo 搞定了
+            //值拆开 todo 搞定了 解析json字符串 2019年8月15日10:29:38
             String jsonString = mapper.writeValueAsString(object);
             System.out.println(jsonString);
 //            claims.put(PAYLOAD, jsonString);

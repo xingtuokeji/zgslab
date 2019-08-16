@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public ServerResponse<String> checkCode(String email) {
+    public ServerResponse<String> generateCheckCode(String email) {
         //邮箱非空验证
         if(email==null||"".equals(email)){
             return ServerResponse.createByErrorMsg("邮箱不能为空,请填入有效地址");
@@ -102,6 +102,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * 忘记密码时候，根据邮箱返回验证码
+     * @param email
+     * @return
+     */
     @Override
     public ServerResponse<String> forgetSendEmailCode(String email) {
         //邮箱非空验证
@@ -115,7 +120,7 @@ public class UserServiceImpl implements UserService {
         smsPojo.setToAddress(email);
         smsPojo.setContent(smsPojo.getContent()+verificationCode);
         if(SmsUtil.sendTextMail(smsPojo)){
-            //发送成功保存邮箱地址对应的验证码 todo
+            //发送成功保存邮箱地址对应的验证码 todo 3分钟 已解决
             redisTemplate.boundValueOps("forget_email").set(verificationCode,180,TimeUnit.SECONDS);
             System.out.println(redisTemplate.boundValueOps("forget_email").get());
             return ServerResponse.createBySuccess(verificationCode);

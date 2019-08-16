@@ -77,4 +77,9 @@ public class QuestionServiceImpl implements QuestionService {
         }
         return ServerResponse.createBySuccessMsg("修改问题成功");
     }
+
+    @Override
+    public List<Question> findAll() {
+        return questionDao.findAll();
+    }
 }

@@ -1,5 +1,6 @@
 package com.simtop.service;
 
+import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
 import com.simtop.pojo.Experiment;
 
@@ -10,11 +11,13 @@ public interface ExperimentService {
 
     ServerResponse<String> generateExpCode();
 
-    ServerResponse<List<Experiment>> findAll();
+    List<Experiment> findAll();
 
     ServerResponse<String> deleteById(Integer id);
 
     ServerResponse<List<Experiment>> findByParams(Experiment experiment);
 
     ServerResponse<Experiment> findById(Integer id);
+
+    ServerResponse<String> updateById(Experiment experiment);
 }
