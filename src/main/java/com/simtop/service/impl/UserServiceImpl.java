@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -82,23 +85,27 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse<String> generateCheckCode(String email) {
-        //邮箱非空验证
-        if(email==null||"".equals(email)){
-            return ServerResponse.createByErrorMsg("邮箱不能为空,请填入有效地址");
-        }
-        //生成随机的6位数字验证码
-        String verificationCode= SmsRandomCodeUtil.generateRandomSixNum();
-        //调用邮箱发送
-        SmsPojo smsPojo = new SmsPojo();
-        smsPojo.setToAddress(email);
-        smsPojo.setContent(smsPojo.getContent()+verificationCode);
-        if(SmsUtil.sendTextMail(smsPojo)){
-            //发送成功保存邮箱地址对应的验证码 todo 已解决
-            // redis中保存邮箱验证码三分钟
-            redisTemplate.boundValueOps("email").set(verificationCode,180,TimeUnit.SECONDS);
-            return ServerResponse.createBySuccess(verificationCode);
-        }else{
-            return ServerResponse.createByErrorMsg("邮件发送失败");
+        synchronized (this){
+            //邮箱非空验证
+            if(email==null||"".equals(email)){
+                return ServerResponse.createByErrorMsg("邮箱不能为空,请填入有效地址");
+            }
+            //生成随机的6位数字验证码
+            String verificationCode= SmsRandomCodeUtil.generateRandomSixNum();
+            //调用邮箱发送
+            SmsPojo smsPojo = new SmsPojo();
+            smsPojo.setToAddress(email);
+            smsPojo.setSubject("用户注册");
+            smsPojo.setContent("注册码为："+verificationCode);
+            if(SmsUtil.sendTextMail(smsPojo)){
+                //发送成功保存邮箱地址对应的验证码 todo 已解决
+                // redis中保存邮箱验证码三分钟
+                redisTemplate.boundValueOps("email").set(verificationCode,180,TimeUnit.SECONDS);
+                // todo 发送的验证码拼接了之前的验证码？？ 获取content内容时候出现getContent现象
+                return ServerResponse.createBySuccess(verificationCode);
+            }else{
+                return ServerResponse.createByErrorMsg("邮件发送失败");
+            }
         }
     }
 
@@ -109,6 +116,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse<String> forgetSendEmailCode(String email) {
+        System.out.println("进入到这里");
         //邮箱非空验证
         if(email==null||"".equals(email)){
             return ServerResponse.createByErrorMsg("邮箱不能为空,请填入有效地址");
@@ -118,7 +126,8 @@ public class UserServiceImpl implements UserService {
         //调用邮箱发送
         SmsPojo smsPojo = new SmsPojo();
         smsPojo.setToAddress(email);
-        smsPojo.setContent(smsPojo.getContent()+verificationCode);
+        smsPojo.setSubject("忘记密码");
+        smsPojo.setContent("验证码为："+verificationCode);
         if(SmsUtil.sendTextMail(smsPojo)){
             //发送成功保存邮箱地址对应的验证码 todo 3分钟 已解决
             redisTemplate.boundValueOps("forget_email").set(verificationCode,180,TimeUnit.SECONDS);
@@ -196,6 +205,12 @@ public class UserServiceImpl implements UserService {
         user.setLoginName(params.getLoginName());
         List<User> userList = userDao.selectByParams(user);
         return ServerResponse.createBySuccess(userList);
+    }
+
+    @Override
+    public ServerResponse<Integer> accountUser() {
+        int count = userDao.selectUserCounts();
+        return ServerResponse.createBySuccess(count);
     }
 
     @Override

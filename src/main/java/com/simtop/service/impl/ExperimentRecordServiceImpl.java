@@ -47,4 +47,16 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
         }
         return ServerResponse.createBySuccessMsg("删除实验记录成功");
     }
+
+    @Override
+    public ServerResponse<Integer> accountExp() {
+        int expNum = experimentRecordDao.queryExpNum();
+        return ServerResponse.createBySuccess(expNum);
+    }
+
+    @Override
+    public ServerResponse<Integer> countTotalExpTime() {
+        int totalTime = experimentRecordDao.selectTotalExpTime();
+        return ServerResponse.createBySuccess(totalTime);
+    }
 }

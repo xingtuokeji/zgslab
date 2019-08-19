@@ -13,4 +13,8 @@ public interface ExperimentRecordService {
     List<ExperimentRecord> findAll();
 
     ServerResponse<String> deleteById(Integer id);
+
+    ServerResponse<Integer> accountExp();
+
+    ServerResponse<Integer> countTotalExpTime();
 }

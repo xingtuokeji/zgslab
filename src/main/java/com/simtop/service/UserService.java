@@ -26,4 +26,6 @@ public interface UserService {
     ServerResponse<String> updateBackendUser(UserVo userVo);
 
     ServerResponse<List<User>> findByParams(UserParamsVo params);
+
+    ServerResponse<Integer> accountUser();
 }

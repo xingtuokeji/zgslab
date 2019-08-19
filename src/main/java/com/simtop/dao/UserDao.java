@@ -26,4 +26,6 @@ public interface UserDao {
     int updateBackendUser(User user);
 
     List<User> selectByParams(User user);
+
+    int selectUserCounts();
 }

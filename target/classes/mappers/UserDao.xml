@@ -80,5 +80,9 @@
         where id=#{id}
     </update>
 
+    <select id="selectUserCounts" resultType="int">
+        select count(*) from tb_user;
+    </select>
+
 </mapper>    
   

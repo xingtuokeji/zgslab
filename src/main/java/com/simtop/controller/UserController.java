@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
- * 用户门户管理器
+ * 用户模块
  */
 @Controller
 @RequestMapping("/user")
@@ -33,17 +34,29 @@ public class UserController {
      * @param userVo
      * @return
      */
-    @RequestMapping(value = "/register.do",method = RequestMethod.POST)
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> register(UserVo userVo){
+    public ServerResponse<String> register(UserVo userVo,HttpServletRequest request) throws UnsupportedEncodingException {
+        /**
+         * 接受前台时候出现乱码问题 进行硬编码 todo 2019年8月19日17:38:20 中文参数乱码问题 important
+         */
+        String school = new String(request.getParameter("school").getBytes("ISO-8859-1"),"utf-8");
+        String province = new String(request.getParameter("province").getBytes("ISO-8859-1"),"utf-8");
+        String city = new String(request.getParameter("city").getBytes("ISO-8859-1"),"utf-8");
+        String username = new String(request.getParameter("username").getBytes("ISO-8859-1"),"utf-8");
+        userVo.setSchool(school);
+        userVo.setProvince(province);
+        userVo.setCity(city);
+        userVo.setUsername(username);
         return userService.register(userVo);
     }
 
     /**
      * 注册时 1、获取后台生成的验证码
+     * 参数需要安全，接口安全 POST
      * @return
      */
-    @RequestMapping(value = "/checkCode.do",method = RequestMethod.GET)
+    @RequestMapping(value = "/checkCode",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> sendEmailCode(String email){
         //根据邮箱获取验证码
@@ -56,7 +69,7 @@ public class UserController {
      * @param userVo
      * @return
      */
-    @RequestMapping(value = "/login.do",method = RequestMethod.POST)
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> login(UserVo userVo){
         User user = new User();
@@ -73,7 +86,7 @@ public class UserController {
      * 忘记密码时获取验证码 邮箱验证码
      *
      */
-    @RequestMapping(value = "/forget_checkCode.do",method = RequestMethod.GET)
+    @RequestMapping(value = "/forget_checkCode",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetSendEmailCode(String email){
         //根据邮箱获取验证码
@@ -81,9 +94,9 @@ public class UserController {
     }
 
     /**
-     * 忘记密码时根据邮箱地址获取验证码
+     * 忘记密码时根据邮箱地址获取验证码 更新
      */
-    @RequestMapping(value = "/update.do",method = RequestMethod.POST)
+    @RequestMapping(value = "/updatePassword",method = RequestMethod.PUT)
     @ResponseBody
     public ServerResponse<String> updatePassword(UserVo userVo){
         return userService.updatePassword(userVo);
@@ -154,5 +167,17 @@ public class UserController {
             return ServerResponse.createByErrorMsg("token已过期");
         }
        return userService.findByParams(params);
+    }
+    /**
+     * 统计功能：统计用户总数量
+     */
+    @RequestMapping(value = "/userAccount",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<Integer> userAccount(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        if(token == null){
+            return ServerResponse.createByErrorMsg("token已过期");
+        }
+        return userService.accountUser();
     }
 }

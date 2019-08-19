@@ -1,6 +1,7 @@
 package com.simtop.service.impl;
 
 import com.simtop.common.ServerResponse;
+import com.simtop.dao.CountDao;
 import com.simtop.dao.UserDao;
 import com.simtop.pojo.User;
 import com.simtop.service.JwtLoginService;
@@ -18,6 +19,9 @@ public class JwtLoginServiceImpl implements JwtLoginService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private CountDao countDao;
+
     @Override
     public ServerResponse<String> login(User user) {
         //验证成功返回token
@@ -31,6 +35,12 @@ public class JwtLoginServiceImpl implements JwtLoginService {
             u.setPassword(StringUtils.EMPTY);//置空密码
             System.out.println(u);
             String token = JwtUtil.sign(u,60L*1000L*60L);//token有效期1小时
+            /**
+             * todo 统计网站访问次数：登陆成功后统计次数变量count加1
+             */
+            int num = countDao.selectCount();
+            int count = ++num;
+            countDao.updateOne(count);
             return ServerResponse.createBySuccess(token);
         }
         return ServerResponse.createByErrorMsg("登陆密码错误");

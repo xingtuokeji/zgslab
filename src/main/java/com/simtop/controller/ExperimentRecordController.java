@@ -95,4 +95,29 @@ public class ExperimentRecordController {
         return experimentRecordService.deleteById(id);
     }
 
+    /**
+     * 统计总的实验次数
+     */
+    @RequestMapping(value = "/expAccount",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<Integer> experimentAccount(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        if(token==null){
+            return ServerResponse.createByErrorMsg("token错误");
+        }
+        return experimentRecordService.accountExp();
+    }
+
+    /**
+     * 统计总的实验时间，单位是秒s
+     */
+    @RequestMapping(value = "/expTime",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<Integer> totalExpCount(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token == null) {
+            return ServerResponse.createByErrorMsg("token错误");
+        }
+        return experimentRecordService.countTotalExpTime();
+    }
 }

@@ -8,26 +8,28 @@ import java.util.Properties;
 public class SmsPojo {
     // 发送邮件的服务器的IP和端口
     private static String mailServerHost = "smtp.qq.com";
-    private static String mailServerPort = "25";
+    private static String mailServerPort = "465";
     // 邮件发送者的地址
     private static String fromAddress = "714203849@qq.com";
     // 邮件接收者的地址
     private static String toAddress;//获取前台注册时候的邮箱地址
     // 登陆邮件发送服务器的用户名和密码 todo
     private static String userName = "714203849@qq.com";
-    private static String password = "caefvhxgffnebdcd";
+    private static String password = "fjoqpepdxckebfce";
     // 是否需要身份验证
     private static boolean validate = true;
     // 邮件主题
-    private static String subject = "验证码：";
+    private static String subject;
     // 邮件的文本内容
-    private static String content = "六位注册验证码为：";
+    private static String content;
 
     public static Properties getProperties(){
         Properties p = new Properties();
         p.put("mail.smtp.host", mailServerHost);
         p.put("mail.smtp.port", mailServerPort);
         p.put("mail.smtp.auth", validate ? "true" : "false");
+        //使用这一句可以解决465端口发送邮件报错问题
+        p.put("mail.smtp.ssl.enable", true);
         return p;
     }
     public String getMailServerHost() {

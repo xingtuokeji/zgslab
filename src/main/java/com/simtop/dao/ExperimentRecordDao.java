@@ -13,4 +13,7 @@ public interface ExperimentRecordDao {
 
     int deleteById(Integer id);
 
+    int queryExpNum();
+
+    int selectTotalExpTime();
 }

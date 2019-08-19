@@ -22,5 +22,14 @@
         delete from tb_experiment_record
         where id=#{id}
     </delete>
+
+    <select id="queryExpNum" resultType="int">
+        select count(*) from tb_experiment_record
+    </select>
+
+    <select id="selectTotalExpTime" resultType="int">
+        select sum(time) from tb_experiment_record;
+    </select>
+
 </mapper>    
   
