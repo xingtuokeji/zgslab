@@ -4,6 +4,7 @@ import com.simtop.common.ServerResponse;
 import com.simtop.pojo.User;
 import com.simtop.util.JwtUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/jwt")
+@CrossOrigin
 public class TestJwtDecodeController {
 
     @RequestMapping(value = "/test",method = RequestMethod.POST)

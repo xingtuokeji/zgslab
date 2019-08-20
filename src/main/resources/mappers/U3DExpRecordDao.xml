@@ -7,8 +7,8 @@
         insert into tb_u3d_web_exp_record(experiment_id, park_browsing, smart_storage_browsing,
         device_awareness, order_processing, pick_by_order, pick_by_batch_order, pick_by_disperse,
         shipping_operation, sorting_operation, total_score, create_time, update_time,user_id)
-        values (#{experimentRecordId},#{parkBrowsing},#{SmartStorageBrowsing},#{DeviceAwareness},#{OrderProcessing},#{PickByOrder},
-        #{PickByBatchOrder},#{PickByDisperse},#{ShippingOperation},#{SortingOperation},#{TotalScore},now(),now(),#{userId})
+        values (#{experimentId},#{parkBrowsing},#{smartStorageBrowsing},#{deviceAwareness},#{orderProcessing},#{pickByOrder},
+        #{pickByBatchOrder},#{pickByDisperse},#{shippingOperation},#{sortingOperation},#{totalScore},now(),now(),#{userId})
     </insert>
 
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.U3DExpRecord">

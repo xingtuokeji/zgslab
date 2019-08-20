@@ -12,11 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/experiment")
+@CrossOrigin
 public class ExperimentController {
     private static final Logger logger = LoggerFactory.getLogger(ExperimentController.class);
 
@@ -36,12 +39,14 @@ public class ExperimentController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/generateExpCode",method = RequestMethod.POST)
+    @RequestMapping(value = "/generateExpCode",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<String> generateExpCode(HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentService.generateExpCode();
     }
@@ -54,11 +59,19 @@ public class ExperimentController {
      */
     @RequestMapping(value = "/add")
     @ResponseBody
-    public ServerResponse<String> addExperiment(Experiment experiment, HttpServletRequest request){
-        //判断token是否失效
+    public ServerResponse<String> addExperiment(Experiment experiment, HttpServletRequest request) throws UnsupportedEncodingException {
+        //解决body中文参数问题 实验名称、课程名称
+        String experimentName = new String(request.getParameter("experimentName").getBytes("ISO-8859-1"),"UTF-8");
+        String courseName = new String(request.getParameter("courseName").getBytes("ISO-8859-1"),"UTF-8");
+        String username = new String(request.getParameter("username").getBytes("ISO-8859-1"),"UTF-8");
+        experiment.setExperimentName(experimentName);
+        experiment.setCourseName(courseName);
+        experiment.setUsername(username);
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentService.add(experiment);
     }
@@ -71,10 +84,11 @@ public class ExperimentController {
     @RequestMapping(value = "/findAll",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<PageInfo<Experiment>> findAll(HttpServletRequest request,Integer pageSize,Integer pageNum){
-        //判断token是否失效
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
@@ -94,10 +108,11 @@ public class ExperimentController {
     @RequestMapping(value = "/deleteById",method = RequestMethod.DELETE)
     @ResponseBody
     public ServerResponse<String> deleteById(HttpServletRequest request,Integer id){
-        //判断token是否失效
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentService.deleteById(id);
     }
@@ -111,10 +126,11 @@ public class ExperimentController {
     @RequestMapping(value = "/findBySomeParams",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<List<Experiment>> findBySomeParams(HttpServletRequest request, Experiment experiment){
-        //判断token是否失效
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentService.findByParams(experiment);
     }
@@ -128,10 +144,11 @@ public class ExperimentController {
     @RequestMapping(value = "/findById",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<Experiment> findById(Integer id,HttpServletRequest request){
-        //判断token是否失效
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentService.findById(id);
     }
@@ -142,10 +159,11 @@ public class ExperimentController {
     @RequestMapping(value = "/updateById",method = RequestMethod.PUT)
     @ResponseBody
     public ServerResponse<String> updateById(HttpServletRequest request,Experiment experiment){
-        //判断token是否失效
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentService.updateById(experiment);
     }

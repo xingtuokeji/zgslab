@@ -4,10 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
 import com.simtop.pojo.Suggest;
+import com.simtop.pojo.User;
 import com.simtop.service.SuggestService;
+import com.simtop.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/suggest")
+@CrossOrigin
 public class SuggestController {
 
     @Autowired
@@ -32,8 +36,10 @@ public class SuggestController {
     @ResponseBody
     public ServerResponse<String> add(HttpServletRequest request,Suggest suggest){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return suggestService.add(suggest);
     }
@@ -50,8 +56,10 @@ public class SuggestController {
     @ResponseBody
     public ServerResponse<PageInfo<Suggest>> findAll(HttpServletRequest request, Integer pageNum, Integer pageSize){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
@@ -72,8 +80,10 @@ public class SuggestController {
     @ResponseBody
     public ServerResponse<String> deleteById(HttpServletRequest request,Integer id){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return suggestService.deleteById(id);
     }
@@ -88,8 +98,10 @@ public class SuggestController {
     @ResponseBody
     public ServerResponse<String> updateById(HttpServletRequest request,Suggest suggest){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return suggestService.updateById(suggest);
     }
@@ -104,8 +116,10 @@ public class SuggestController {
     @ResponseBody
     public ServerResponse<Suggest> findById(HttpServletRequest request,Integer id){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return suggestService.findById(id);
     }

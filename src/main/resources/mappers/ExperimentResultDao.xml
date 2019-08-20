@@ -5,9 +5,9 @@
 <mapper namespace="com.simtop.dao.ExperimentResultDao">
     <insert id="insert" parameterType="com.simtop.pojo.ExperimentResult">
         insert into tb_u3d_web_exp_result(experiment_id, experiment_method_id, user_id, total_pick_time,
-        effective_time, create_time, update_time, efficiency, walk_step, experiment_times, worker)
-        values (#{experimentId},#{experimentMethodId},#{userId},#{totalPickTime},#{effectiveTime},now(),now(),#{efficiency},#{walkStep},
-        #{experimentTimes},#{worker})
+        effective_time, create_time, update_time, efficiency, walk_step, experiment_times,worker,order_num,goods_item,goods_total_num,
+        user_summary) values (#{experimentId},#{experimentMethodId},#{userId},#{totalPickTime},#{effectiveTime},now(),now(),#{efficiency},
+        #{walkStep},#{experimentTimes},#{worker},#{orderNum},#{goodsItem},#{goodsTotalNum},#{userSummary})
     </insert>
 </mapper>    
   

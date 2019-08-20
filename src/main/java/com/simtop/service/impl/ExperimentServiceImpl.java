@@ -28,11 +28,16 @@ public class ExperimentServiceImpl implements ExperimentService {
     //从token中获取 todo
     @Override
     public ServerResponse<String> add(Experiment experiment) {
-        String expCode = redisTemplate.boundValueOps("expCode").get().toString();
-        if(expCode.equals("")){
-            return ServerResponse.createByErrorMsg("实验码已过期，请重新生成");
+        //生成一条实验课程之前，需要生成实验编码 todo 空指针异常
+        try{
+            String experimentCode = redisTemplate.boundValueOps("expCode").get().toString();
+            if(experimentCode == null || "".equals(experimentCode)){
+                return ServerResponse.createByErrorMsg("请生成实验编码");
+            }
+            experiment.setExperimentCode(experimentCode);
+        }catch (NullPointerException e){
+            return ServerResponse.createByErrorMsg("请生成实验编码");
         }
-        experiment.setExperimentCode(expCode);
         int resultCount = experimentDao.insert(experiment);
         if(resultCount != 1){
             return ServerResponse.createByErrorMsg("新增实验失败");

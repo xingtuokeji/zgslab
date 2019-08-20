@@ -5,13 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
 import com.simtop.dao.ExperimentRecordDao;
 import com.simtop.pojo.ExperimentRecord;
+import com.simtop.pojo.User;
 import com.simtop.service.ExperimentRecordService;
+import com.simtop.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/experimentRecord")
+@CrossOrigin
 public class ExperimentRecordController {
 
     @Autowired
@@ -36,10 +37,12 @@ public class ExperimentRecordController {
     @RequestMapping(value = "/findById",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<ExperimentRecord> findById(Integer id, HttpServletRequest request){
+        //todo
         String token = request.getHeader("Authorization");
-        System.out.println(token);
-        if(token==null){
-            return ServerResponse.createByErrorMsg("请传入登陆时候的token");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentRecordService.findById(id);
     }
@@ -52,10 +55,12 @@ public class ExperimentRecordController {
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> add(HttpServletRequest request,ExperimentRecord record){
+    public ServerResponse<String> add(HttpServletRequest request,@RequestBody ExperimentRecord record){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("请传入登陆时候的token");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentRecordService.add(record);
     }
@@ -69,8 +74,10 @@ public class ExperimentRecordController {
     @ResponseBody
     public ServerResponse<PageInfo<ExperimentRecord>> findAll(HttpServletRequest request,Integer pageNum,Integer pageSize){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("请传入登陆时候的token");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
@@ -89,8 +96,10 @@ public class ExperimentRecordController {
     @ResponseBody
     public ServerResponse<String> deleteById(HttpServletRequest request,Integer id){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("请传入登陆时候的token");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentRecordService.deleteById(id);
     }
@@ -98,12 +107,15 @@ public class ExperimentRecordController {
     /**
      * 统计总的实验次数
      */
-    @RequestMapping(value = "/expAccount",method = RequestMethod.GET)
+    @GetMapping("/expAcct")
     @ResponseBody
     public ServerResponse<Integer> experimentAccount(HttpServletRequest request){
+        System.out.println("这个方法不能跨域访问。。。。。。。");
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentRecordService.accountExp();
     }
@@ -114,9 +126,12 @@ public class ExperimentRecordController {
     @RequestMapping(value = "/expTime",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<Integer> totalExpCount(HttpServletRequest request) {
+//        System.out.println("这个方法可以跨域访问/////");
         String token = request.getHeader("Authorization");
-        if (token == null) {
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentRecordService.countTotalExpTime();
     }

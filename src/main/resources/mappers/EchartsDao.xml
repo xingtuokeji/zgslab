@@ -8,7 +8,7 @@
     </select>
     <select id="selectRoleUser" resultType="com.simtop.pojo.Echarts2">
         select tr.role_name as name,count(*) as value from tb_user tu left join tb_role tr
-        ON tu.role_id=tr.id where tu.role_id!=1 group by role_id  order by value desc;
+        ON tu.role_id=tr.id where tu.role_id!=1 and tu.role_id!=3 group by role_id order by value desc;
     </select>
 
     <select id="selectScoreUser" resultType="com.simtop.pojo.Echarts3">

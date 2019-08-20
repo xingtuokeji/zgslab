@@ -33,6 +33,47 @@ public class ExperimentResult {
     //最后一次更新时间
     private Date updateTime;
 
+    //订单量
+    private int orderNum;
+    //货物品项
+    private int goodsItem;
+    //货物总量
+    private int goodsTotalNum;
+    //用户总结
+    private String userSummary;
+
+    public int getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(int orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public int getGoodsItem() {
+        return goodsItem;
+    }
+
+    public void setGoodsItem(int goodsItem) {
+        this.goodsItem = goodsItem;
+    }
+
+    public int getGoodsTotalNum() {
+        return goodsTotalNum;
+    }
+
+    public void setGoodsTotalNum(int goodsTotalNum) {
+        this.goodsTotalNum = goodsTotalNum;
+    }
+
+    public String getUserSummary() {
+        return userSummary;
+    }
+
+    public void setUserSummary(String userSummary) {
+        this.userSummary = userSummary;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -144,6 +185,10 @@ public class ExperimentResult {
                 ", worker='" + worker + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", orderNum=" + orderNum +
+                ", goodsItem=" + goodsItem +
+                ", goodsTotalNum=" + goodsTotalNum +
+                ", userSummary='" + userSummary + '\'' +
                 '}';
     }
 }

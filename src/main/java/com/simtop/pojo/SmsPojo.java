@@ -15,7 +15,8 @@ public class SmsPojo {
     private static String toAddress;//获取前台注册时候的邮箱地址
     // 登陆邮件发送服务器的用户名和密码 todo
     private static String userName = "714203849@qq.com";
-    private static String password = "fjoqpepdxckebfce";
+    // todo 授权码
+    private static String password = "qdbgctlkdhupbefi";
     // 是否需要身份验证
     private static boolean validate = true;
     // 邮件主题

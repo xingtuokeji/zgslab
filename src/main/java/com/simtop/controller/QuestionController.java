@@ -4,10 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
 import com.simtop.pojo.Question;
+import com.simtop.pojo.User;
 import com.simtop.service.QuestionService;
+import com.simtop.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +23,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/question")
+@CrossOrigin
 public class QuestionController {
 
     @Autowired
@@ -35,8 +39,10 @@ public class QuestionController {
     @ResponseBody
     public ServerResponse<String> addQuestion(Question question, HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return questionService.add(question);
     }
@@ -48,8 +54,10 @@ public class QuestionController {
     @ResponseBody
     public ServerResponse<PageInfo<Question>> findAll(HttpServletRequest request,Integer pageNum,Integer pageSize){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
@@ -67,8 +75,10 @@ public class QuestionController {
     @ResponseBody
     public ServerResponse<Question> findByQuestionId(HttpServletRequest request,Integer id){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return questionService.findById(id);
     }
@@ -80,8 +90,10 @@ public class QuestionController {
     @ResponseBody
     public ServerResponse<List<Question>> findAll(HttpServletRequest request,Integer id){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return questionService.findAllById(id);
     }
@@ -93,8 +105,10 @@ public class QuestionController {
     @ResponseBody
     public ServerResponse<PageInfo<Question>> findByParams(Question question,HttpServletRequest request,Integer pageSize,Integer pageNum){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
@@ -111,8 +125,10 @@ public class QuestionController {
     @ResponseBody
     public ServerResponse<String> deleteByQuestionId(Integer id,HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return questionService.deleteById(id);
     }
@@ -124,8 +140,10 @@ public class QuestionController {
     @ResponseBody
     public ServerResponse<String> updateById(Question question,HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        if(token==null){
-            return ServerResponse.createByErrorMsg("token错误");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return questionService.updateById(question);
     }

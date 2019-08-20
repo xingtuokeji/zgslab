@@ -6,8 +6,10 @@ import com.simtop.pojo.U3DExpRecord;
 import com.simtop.service.U3DExpRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class U3DExpRecordServiceImpl implements U3DExpRecordService {
 
     @Autowired

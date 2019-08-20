@@ -4,15 +4,15 @@ import com.simtop.common.ServerResponse;
 import com.simtop.pojo.User;
 import com.simtop.service.JwtLoginService;
 import com.simtop.service.UserService;
+import com.simtop.util.JwtUtil;
 import com.simtop.vo.UserParamsVo;
 import com.simtop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -21,6 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/user")
+@CrossOrigin //todo 跨域问题
 public class UserController {
 
     @Autowired
@@ -36,7 +37,7 @@ public class UserController {
      */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> register(UserVo userVo,HttpServletRequest request) throws UnsupportedEncodingException {
+    public ServerResponse<String> register(@RequestBody UserVo userVo,HttpServletRequest request) throws UnsupportedEncodingException {
         /**
          * 接受前台时候出现乱码问题 进行硬编码 todo 2019年8月19日17:38:20 中文参数乱码问题 important
          */
@@ -58,7 +59,7 @@ public class UserController {
      */
     @RequestMapping(value = "/checkCode",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> sendEmailCode(String email){
+    public ServerResponse<String> sendEmailCode(@RequestBody String email){
         //根据邮箱获取验证码
         return userService.generateCheckCode(email);
     }
@@ -71,7 +72,7 @@ public class UserController {
      */
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> login(UserVo userVo){
+    public ServerResponse<String> login(@RequestBody UserVo userVo){
         User user = new User();
         //角色id
         user.setRoleId(userVo.getRoleId());
@@ -88,7 +89,7 @@ public class UserController {
      */
     @RequestMapping(value = "/forget_checkCode",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> forgetSendEmailCode(String email){
+    public ServerResponse<String> forgetSendEmailCode(@RequestBody String email){
         //根据邮箱获取验证码
         return userService.forgetSendEmailCode(email);
     }
@@ -98,7 +99,7 @@ public class UserController {
      */
     @RequestMapping(value = "/updatePassword",method = RequestMethod.PUT)
     @ResponseBody
-    public ServerResponse<String> updatePassword(UserVo userVo){
+    public ServerResponse<String> updatePassword(@RequestBody UserVo userVo){
         return userService.updatePassword(userVo);
     }
 
@@ -108,10 +109,11 @@ public class UserController {
     @RequestMapping(value = "/findAll",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<List<User>> findAll(Integer userId, HttpServletRequest request){
-        //判断token是否失效
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return userService.findAll();
     }
@@ -120,11 +122,12 @@ public class UserController {
      */
     @RequestMapping(value = "/backend/add",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> addUser(UserVo userVo,Integer userId, HttpServletRequest request){
-        //判断token是否失效
+    public ServerResponse<String> addUser(@RequestBody UserVo userVo,Integer userId, HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return userService.insertBackUser(userVo);
     }
@@ -136,21 +139,23 @@ public class UserController {
     @RequestMapping(value = "/deleteByUserId",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<String> deleteById(Integer userId, HttpServletRequest request,Integer id){
-        //判断token是否失效
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return userService.deleteByUserId(id);
     }
 
     @RequestMapping(value = "/backend/update",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> updateBackendUser(UserVo userVo,Integer userId, HttpServletRequest request){
-        //判断token是否失效
+    public ServerResponse<String> updateBackendUser(@RequestBody UserVo userVo,Integer userId, HttpServletRequest request){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return userService.updateBackendUser(userVo);
     }
@@ -160,23 +165,27 @@ public class UserController {
      */
     @RequestMapping(value = "/backend/findByParams",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<List<User>> findByParams(HttpServletRequest request, UserParamsVo params){
-        //判断token是否失效
+    public ServerResponse<List<User>> findByParams(@RequestBody HttpServletRequest request, UserParamsVo params){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
        return userService.findByParams(params);
     }
     /**
      * 统计功能：统计用户总数量
      */
-    @RequestMapping(value = "/userAccount",method = RequestMethod.GET)
+    // @RequestMapping(value = "/userAccount",method = RequestMethod.GET)
+    @GetMapping("/userAccount")
     @ResponseBody
-    public ServerResponse<Integer> userAccount(HttpServletRequest request){
+    public ServerResponse<Integer> userAccount(HttpServletRequest request, HttpServletResponse response){
         String token = request.getHeader("Authorization");
-        if(token == null){
-            return ServerResponse.createByErrorMsg("token已过期");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
         }
         return userService.accountUser();
     }
