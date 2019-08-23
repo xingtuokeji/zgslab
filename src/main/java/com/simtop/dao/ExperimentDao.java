@@ -20,4 +20,6 @@ public interface ExperimentDao {
     Experiment findById(Integer id);
 
     int updateById(Experiment experiment);
+
+    Experiment findByExperimentCode(String experimentCode);
 }

@@ -14,11 +14,10 @@
     </insert>
 
     <select id="findByExperimentTimes" parameterType="com.simtop.pojo.ExperimentResult" resultType="com.simtop.pojo.ExperimentResult">
-        select id, experiment_id, experiment_method_id, user_id, total_pick_time, effective_time, create_time,
-        update_time, efficiency, walk_step, experiment_times, worker, order_num,
-        goods_item, goods_total_num, user_summary, user_comment
+        select id, user_id, experiment_id, worker, experiment_times, zbs_effective_time, zbs_total_pick_time, zbs_efficiency, zbs_walk_step, zqs_effective_time, zqs_total_pick_time, zqs_efficiency, zqs_walk_step, bzs_effective_time, bzs_total_pick_time, bzs_efficiency, bzs_walk_step, order_num, goods_item, goods_total_num,
+        user_summary, user_comment, star, create_time, update_time
         from tb_u3d_web_exp_result
-        where user_id=#{userId} and experiment_id=#{experimentId} and experiment_method_id=#{experimentMethodId} and experiment_times=#{experimentTimes}
+        where experiment_id=#{experimentId} and experiment_times=#{experimentTimes}
     </select>
 </mapper>    
   

@@ -16,6 +16,19 @@
             <result property="time" column="time"/>
         </association>
     </resultMap>
+
+    <resultMap id="result1" type="com.simtop.pojo.ExperimentRecord">
+        <id property="id" column="tr.id"/>
+        <result property="username" column="username"/>
+        <result property="school" column="school"/>
+        <result property="experimentName" column="experiment_name"/>
+        <result property="courseName" column="course_name"/>
+        <association property="u3DReportToWeb" column="id" javaType="com.simtop.pojo.ExperimentResult">
+            <id property="id" column="id"/>
+            <result property="experimentId" column="experiment_id"/>
+        </association>
+    </resultMap>
+
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.ExperimentRecord">
         select id,username,school,course_name,experiment_name,create_time,time,total_score,update_time
         from tb_experiment_record where id=#{id}
@@ -49,6 +62,12 @@
 
     <select id="selectTotalExpTime" resultType="int">
         select sum(time) from tb_experiment_record;
+    </select>
+
+    <select id="selectByExperimentId" resultMap="result1">
+        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.create_time,tr.update_time
+        from tb_experiment_record tr,tb_u3d_web_exp_result
+        where tr.id=tb_u3d_web_exp_result.experiment_id
     </select>
 
 </mapper>    

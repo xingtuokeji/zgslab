@@ -85,4 +85,10 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
         int totalTime = experimentRecordDao.selectTotalExpTime();
         return ServerResponse.createBySuccess(totalTime);
     }
+
+    @Override
+    public List<ExperimentRecord> selectByExperimentId() {
+        List<ExperimentRecord> experimentRecords = experimentRecordDao.selectByExperimentId();
+        return experimentRecords;
+    }
 }

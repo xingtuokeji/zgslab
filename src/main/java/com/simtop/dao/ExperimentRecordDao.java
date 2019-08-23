@@ -18,4 +18,7 @@ public interface ExperimentRecordDao {
     int selectTotalExpTime();
 
     int insertDispersionExp(ExperimentRecord record);
+
+    List<ExperimentRecord> selectByExperimentId();
+
 }

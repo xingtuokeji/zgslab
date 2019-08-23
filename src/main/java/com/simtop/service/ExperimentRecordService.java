@@ -17,4 +17,7 @@ public interface ExperimentRecordService {
     ServerResponse<Integer> accountExp();
 
     ServerResponse<Integer> countTotalExpTime();
+
+    List<ExperimentRecord> selectByExperimentId();
+
 }

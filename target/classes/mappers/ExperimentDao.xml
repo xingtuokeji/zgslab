@@ -51,5 +51,12 @@
         where id=#{id}
     </update>
 
+    <select id="findByExperimentCode" parameterType="string" resultType="com.simtop.pojo.Experiment">
+        select id, course_id, course_name, experiment_type_id, create_time, update_time, user_id, username,
+        experiment_code, experiment_start_time, experiment_end_time, experiment_name
+        from tb_experiment
+        where experiment_code=#{experimentCode}
+    </select>
+
 </mapper>    
   

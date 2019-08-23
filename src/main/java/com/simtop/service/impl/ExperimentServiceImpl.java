@@ -102,4 +102,10 @@ public class ExperimentServiceImpl implements ExperimentService {
         }
         return ServerResponse.createBySuccessMsg("修改实验课程信息成功");
     }
+
+    @Override
+    public ServerResponse<Experiment> findByExperimentCode(String experimentCode) {
+        Experiment experiment = experimentDao.findByExperimentCode(experimentCode);
+        return ServerResponse.createBySuccess(experiment);
+    }
 }

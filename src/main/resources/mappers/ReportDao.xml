@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simtop.dao.ReportDao">
+    <select id="findByExperimentId" parameterType="int" resultType="com.simtop.pojo.Report">
+        select id,school, course_name, username, teacher_name, organization, date, score
+        from tb_report
+        where experiment_id=#{experimentId}
+    </select>
+</mapper>    
+  

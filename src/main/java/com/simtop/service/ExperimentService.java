@@ -20,4 +20,6 @@ public interface ExperimentService {
     ServerResponse<Experiment> findById(Integer id);
 
     ServerResponse<String> updateById(Experiment experiment);
+
+    ServerResponse<Experiment> findByExperimentCode(String experimentCode);
 }

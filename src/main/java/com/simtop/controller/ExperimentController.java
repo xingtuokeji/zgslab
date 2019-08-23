@@ -175,4 +175,19 @@ public class ExperimentController {
         }
         return experimentService.updateById(experiment);
     }
+
+    /**
+     * 根据实验编码查询数据
+     */
+    @RequestMapping(value = "/findByExperimentCode",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<Experiment> findByExperimentCode(HttpServletRequest request,String experimentCode){
+        String token = request.getHeader("Authorization");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        return experimentService.findByExperimentCode(experimentCode);
+    }
 }

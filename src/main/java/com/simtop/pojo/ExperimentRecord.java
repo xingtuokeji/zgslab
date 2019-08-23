@@ -1,13 +1,12 @@
 package com.simtop.pojo;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.simtop.controller.U3DReportToWeb;
 
 import java.util.Date;
 
 /**
  * 实验记录表
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class ExperimentRecord {
     //用于区分实验类型和组织形式
     private Integer params;
@@ -35,7 +34,17 @@ public class ExperimentRecord {
     private String experimentType;
     //组织形式 班级/个人
     private String organization;
+    //关联报告表
+    private U3DReportToWeb u3DReportToWeb;
 
+
+    public U3DReportToWeb getU3DReportToWeb() {
+        return u3DReportToWeb;
+    }
+
+    public void setU3DReportToWeb(U3DReportToWeb u3DReportToWeb) {
+        this.u3DReportToWeb = u3DReportToWeb;
+    }
 
     public Integer getParams() {
         return params;
@@ -157,6 +166,7 @@ public class ExperimentRecord {
                 ", u3DExpRecord=" + u3DExpRecord +
                 ", experimentType='" + experimentType + '\'' +
                 ", organization='" + organization + '\'' +
+                ", u3DReportToWeb=" + u3DReportToWeb +
                 '}';
     }
 }

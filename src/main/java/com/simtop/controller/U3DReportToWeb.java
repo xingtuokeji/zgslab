@@ -2,8 +2,10 @@ package com.simtop.controller;
 
 import com.simtop.common.ServerResponse;
 import com.simtop.interceptor.ExperimentResultService;
+import com.simtop.pojo.ExperimentRecord;
 import com.simtop.pojo.ExperimentResult;
 import com.simtop.pojo.User;
+import com.simtop.service.ExperimentRecordService;
 import com.simtop.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class U3DReportToWeb {
     @Autowired
     private ExperimentResultService experimentResultService;
 
+    @Autowired
+    private ExperimentRecordService experimentRecordService;
+
     /**
      * U3D<<<Web
      * @param result
@@ -46,24 +51,37 @@ public class U3DReportToWeb {
         return experimentResultService.add(result);
     }
 
-//    /**
-//     * 给front提供的数据接口
-//     * 同一个userId、experimentMethod、不同实验次数experimentTimes的数据
-//     */
-//    @RequestMapping(value = "/findByExpTimes",method = RequestMethod.GET)
-//    @ResponseBody
-//    public ServerResponse<List<ExperimentResult>> findByExperimentTimes(ExperimentResult result, HttpServletRequest request){
-//        String token = request.getHeader("Authorization");
-//        String jwt = token.substring(token.lastIndexOf(" ")+1);
-//        User u = JwtUtil.unsign(jwt,User.class);
-//        if(u == null){
-//            return ServerResponse.createByErrorMsg("token无效");
-//        }
-//        return experimentResultService.findByExperimentTimes(result);
-//    }
+    /**
+     * 给front提供的数据接口
+     * 同一个userId、experimentMethod、不同实验次数experimentTimes的数据
+     */
+    @RequestMapping(value = "/findByExpTimes",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<List<ExperimentResult>> findByExperimentTimes(ExperimentResult result, HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        return experimentResultService.findByExperimentTimes(result);
+    }
 
     /**
-     * 返回报告头部信息
+     * 根据实验id显示生成的报告
      */
+    @RequestMapping(value = "/showReport",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<List<ExperimentRecord>> showReport(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        //关联查询报告表和实验记录表显示已经出报告的数据
+        List<ExperimentRecord> experimentRecordList = experimentRecordService.selectByExperimentId();
+        return ServerResponse.createBySuccess(experimentRecordList);
+    }
 
 }
