@@ -7,10 +7,7 @@ import com.simtop.service.CommentService;
 import com.simtop.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +30,7 @@ public class CommentController {
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> addComment(HttpServletRequest request, Comment comment){
+    public ServerResponse<String> addComment(HttpServletRequest request, @RequestBody Comment comment){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);

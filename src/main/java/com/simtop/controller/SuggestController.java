@@ -10,10 +10,7 @@ import com.simtop.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -34,13 +31,18 @@ public class SuggestController {
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> add(HttpServletRequest request,Suggest suggest){
+    public ServerResponse<String> add(HttpServletRequest request, @RequestBody  Suggest suggest){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
+        //检查一下评星数据表中是否含有user_id,如果存在则返回提示信息
+        if(suggestService.checkUserId(u.getId())==1){
+            return ServerResponse.createByErrorMsg("用户已经评价，不可重复评价");
+        }
+        suggest.setUserId(u.getId());
         return suggestService.add(suggest);
     }
 
@@ -96,7 +98,7 @@ public class SuggestController {
      */
     @RequestMapping(value = "/updateById",method = RequestMethod.PUT)
     @ResponseBody
-    public ServerResponse<String> updateById(HttpServletRequest request,Suggest suggest){
+    public ServerResponse<String> updateById(HttpServletRequest request,@RequestBody Suggest suggest){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
@@ -122,5 +124,19 @@ public class SuggestController {
             return ServerResponse.createByErrorMsg("token无效");
         }
         return suggestService.findById(id);
+    }
+    /**
+     * 统计综合评分
+     */
+    @RequestMapping(value = "/countMark",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<Double> countMark(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        return suggestService.countMark();
     }
 }

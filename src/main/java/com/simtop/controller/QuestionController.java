@@ -10,16 +10,13 @@ import com.simtop.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 实验问题
+ * 实验答疑模块
  */
 @Controller
 @RequestMapping("/question")
@@ -37,7 +34,7 @@ public class QuestionController {
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> addQuestion(Question question, HttpServletRequest request){
+    public ServerResponse<String> addQuestion(@RequestBody Question question, HttpServletRequest request){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
@@ -138,7 +135,7 @@ public class QuestionController {
      */
     @RequestMapping(value = "/updateById",method = RequestMethod.PUT)
     @ResponseBody
-    public ServerResponse<String> updateById(Question question,HttpServletRequest request){
+    public ServerResponse<String> updateById(@RequestBody Question question,HttpServletRequest request){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);

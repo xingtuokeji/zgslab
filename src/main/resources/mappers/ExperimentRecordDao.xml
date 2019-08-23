@@ -3,19 +3,39 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.simtop.dao.ExperimentRecordDao">
+    <resultMap id="result" type="com.simtop.pojo.ExperimentRecord">
+        <id property="id" column="tr.id"/>
+        <result property="username" column="username"/>
+        <result property="school" column="school"/>
+        <result property="experimentName" column="experiment_name"/>
+        <result property="courseName" column="course_name"/>
+        <association property="u3DExpRecord" column="id" javaType="com.simtop.pojo.U3DExpRecord">
+            <id property="id" column="id"/>
+            <result property="experimentId" column="experiment_id"/>
+            <result property="totalScore" column="total_score"/>
+            <result property="time" column="time"/>
+        </association>
+    </resultMap>
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.ExperimentRecord">
-        select id,username,school,course_name,experiment_name,create_time,time,score,update_time
+        select id,username,school,course_name,experiment_name,create_time,time,total_score,update_time
         from tb_experiment_record where id=#{id}
     </select>
 
-    <insert id="insert" parameterType="com.simtop.pojo.ExperimentRecord">
-        insert into tb_experiment_record (username, school, course_name, experiment_name, create_time, score,time,update_time)
-        values (#{username},#{school},#{courseName},#{experimentName},now(),#{score},#{time},now())
+    <insert id="insert" parameterType="com.simtop.pojo.ExperimentRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_experiment_record (username, school, course_name, experiment_name, create_time, total_score,time,update_time,experiment_type,organization)
+        values (#{username},#{school},#{courseName},#{experimentName},now(),NULL,NULL,now(),#{experimentType},#{organization})
     </insert>
 
-    <select id="selectAll" resultType="com.simtop.pojo.ExperimentRecord">
-        select id,username, school, course_name, experiment_name, create_time, score,time,update_time
-        from tb_experiment_record
+    <insert id="insertDispersionExp" parameterType="com.simtop.pojo.ExperimentRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_experiment_record(username, school, course_name,
+        experiment_name, create_time, time, total_score, update_time, experiment_type, organization)
+        values (#{username},#{school},NULL,NULL,now(),NULL,NULL,now(),#{experimentType},#{organization})
+    </insert>
+
+    <select id="selectAll" resultMap="result">
+        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.create_time,twr.total_score,twr.time,tr.update_time
+        from tb_experiment_record tr left join tb_u3d_web_exp_record twr
+        on tr.id=twr.experiment_id
     </select>
 
     <delete id="deleteById" parameterType="int">

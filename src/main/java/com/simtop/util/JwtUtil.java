@@ -33,6 +33,8 @@ public class JwtUtil {
             Integer id = jsonObject.getInteger("id");
             String loginName = jsonObject.getString("loginName");
             Integer roleId = Integer.valueOf(jsonObject.getString("roleId"));
+            String school = jsonObject.getString("school");
+            System.out.println(school);
             /**
              * json字符串
              * {
@@ -47,6 +49,7 @@ public class JwtUtil {
             claims.put("username",username);
             claims.put("loginName",loginName);
             claims.put("roleId",roleId);
+            claims.put("school",school);
             claims.put(EXP, System.currentTimeMillis() + maxAge);
             return signer.sign(claims);
         } catch(Exception e) {
@@ -67,11 +70,13 @@ public class JwtUtil {
                     Integer id = (Integer) claims.get("id");
                     String loginName = (String) claims.get("loginName");
                     Integer roleId = (Integer) claims.get("roleId");
+                    String school = (String) claims.get("school");
                     User user = new User();
                     user.setId(id);
                     user.setUsername(username);
                     user.setLoginName(loginName);
                     user.setRoleId(roleId);
+                    user.setSchool(school);
                     //todo 封装成json字符串
                     String json = JSONObject.toJSONString(user);
                     ObjectMapper objectMapper = new ObjectMapper();

@@ -49,13 +49,14 @@ public class ExperimentRecordController {
 
     /**
      * 新增一条实验记录
+     * 区分组织形式（班级/个人）、实验类型（集中/分散） 通过参数来区分
      * @param request
      * @param record
      * @return
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> add(HttpServletRequest request,@RequestBody ExperimentRecord record){
+    public ServerResponse<Integer> add(HttpServletRequest request,@RequestBody ExperimentRecord record){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);

@@ -14,4 +14,8 @@ public interface SuggestDao {
     int updateById(Suggest suggest);
 
     Suggest selectById(Integer id);
+
+    int checkUserId(Integer id);
+
+    double countMark();
 }

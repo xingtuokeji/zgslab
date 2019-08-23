@@ -15,7 +15,7 @@ public interface ExperimentService {
 
     ServerResponse<String> deleteById(Integer id);
 
-    ServerResponse<List<Experiment>> findByParams(Experiment experiment);
+    List<Experiment> findByParams(Experiment experiment);
 
     ServerResponse<Experiment> findById(Integer id);
 

@@ -20,6 +20,16 @@ public class Suggest {
     private Date createTime;
     //最后一次更新时间
     private Date updateTime;
+    //用户id
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getId() {
         return id;
@@ -87,6 +97,7 @@ public class Suggest {
                 ", star=" + star +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", userId=" + userId +
                 '}';
     }
 }

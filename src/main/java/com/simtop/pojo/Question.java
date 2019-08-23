@@ -23,7 +23,7 @@ public class Question {
     //最后一次更新时间
     private Date updateTime;
     //是否答复
-    private Integer isAnswer;
+    private Integer isAnswer;//1答复 2未答复
 
     //封装评论信息
     private List<Comment> comments;

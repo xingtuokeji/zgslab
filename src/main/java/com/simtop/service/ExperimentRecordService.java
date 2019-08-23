@@ -8,7 +8,7 @@ import java.util.List;
 public interface ExperimentRecordService {
     ServerResponse<ExperimentRecord> findById(Integer id);
 
-    ServerResponse<String> add(ExperimentRecord record);
+    ServerResponse<Integer> add(ExperimentRecord record);
 
     List<ExperimentRecord> findAll();
 

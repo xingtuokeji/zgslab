@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 @Service
 @Transactional
 public class ExperimentResultServiceImpl implements ExperimentResultService {
@@ -23,4 +26,11 @@ public class ExperimentResultServiceImpl implements ExperimentResultService {
         }
         return ServerResponse.createBySuccessMsg("向web端插入数据成功");
     }
+
+    @Override
+    public ServerResponse<List<ExperimentResult>> findByExperimentTimes(ExperimentResult result) {
+        List<ExperimentResult> experimentResultList = experimentResultDao.findByExperimentTimes(result);
+        return ServerResponse.createBySuccess(experimentResultList);
+    }
+
 }

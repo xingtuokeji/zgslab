@@ -12,13 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,16 +56,19 @@ public class ExperimentController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> addExperiment(Experiment experiment, HttpServletRequest request) throws UnsupportedEncodingException {
-        //解决body中文参数问题 实验名称、课程名称
-        String experimentName = new String(request.getParameter("experimentName").getBytes("ISO-8859-1"),"UTF-8");
-        String courseName = new String(request.getParameter("courseName").getBytes("ISO-8859-1"),"UTF-8");
-        String username = new String(request.getParameter("username").getBytes("ISO-8859-1"),"UTF-8");
-        experiment.setExperimentName(experimentName);
-        experiment.setCourseName(courseName);
-        experiment.setUsername(username);
+    public ServerResponse<String> addExperiment(@RequestBody Experiment experiment, HttpServletRequest request){
+        // todo
+//        //解决body中文参数问题 实验名称、课程名称
+//        String experimentName = new String(request.getParameter("experimentName").getBytes("ISO-8859-1"),"UTF-8");
+//        String courseName = new String(request.getParameter("courseName").getBytes("ISO-8859-1"),"UTF-8");
+//        String username = new String(request.getParameter("username").getBytes("ISO-8859-1"),"UTF-8");
+//        //todo 时间类型数据转化 important
+//        System.out.println(experiment.getExperimentStartTime());
+//        experiment.setExperimentName(experimentName);
+//        experiment.setCourseName(courseName);
+//        experiment.setUsername(username);
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
@@ -125,14 +127,20 @@ public class ExperimentController {
      */
     @RequestMapping(value = "/findBySomeParams",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<List<Experiment>> findBySomeParams(HttpServletRequest request, Experiment experiment){
+    public ServerResponse<PageInfo<Experiment>> findBySomeParams(HttpServletRequest request, Experiment experiment,Integer pageSize,Integer pageNum){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-        return experimentService.findByParams(experiment);
+        if(ObjectUtils.isEmpty(pageNum)){
+            pageNum = 1;
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<Experiment> experimentList = experimentService.findByParams(experiment);
+        PageInfo<Experiment> pageInfo = new PageInfo<>(experimentList);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 
     /**
@@ -158,7 +166,7 @@ public class ExperimentController {
      */
     @RequestMapping(value = "/updateById",method = RequestMethod.PUT)
     @ResponseBody
-    public ServerResponse<String> updateById(HttpServletRequest request,Experiment experiment){
+    public ServerResponse<String> updateById(HttpServletRequest request,@RequestBody Experiment experiment){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);

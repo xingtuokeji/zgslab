@@ -1,8 +1,8 @@
 package com.simtop.pojo;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,9 +21,9 @@ public class Experiment {
     private Date createTime;//创建时间
     private Date updateTime;//最后一次更新时间
     // todo 前台 String类型的时间到后台Date类型时间转换问题
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date experimentStartTime;//实验开始时间
-    @DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss" )
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date experimentEndTime;//实验结束时间
 
     public String getCourseName() {

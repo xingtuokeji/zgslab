@@ -9,7 +9,7 @@
     http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!--扫描redis配置文件-->
-    <context:property-placeholder ignore-unresolvable="true" location="classpath:redis.properties"/>
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:redis.properties,classpath:db.properties"/>
     <!-- **************************************************redis********************************************************** -->
     <!-- 配置 JedisPoolConfig 实例 -->
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -33,7 +33,6 @@
         <property name="connectionFactory" ref="jedisConnectionFactory"/>
     </bean>
 
-    <context:property-placeholder file-encoding="utf-8" location="classpath:db.properties"/>
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="driverClassName" value="${db.driver}"/>
         <property name="url" value="${db.url}"/>

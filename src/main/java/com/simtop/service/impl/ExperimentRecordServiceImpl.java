@@ -25,12 +25,38 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
     }
 
     @Override
-    public ServerResponse<String> add(ExperimentRecord record) {
-        int resultCount = experimentRecordDao.insert(record);
-        if(resultCount != 1){
-            return ServerResponse.createByErrorMsg("新增实验记录失败");
+    public ServerResponse<Integer> add(ExperimentRecord record) {
+        if(record.getParams()==null){
+            return ServerResponse.createByErrorMsg("参数params错误！");
         }
-        return ServerResponse.createBySuccessMsg("新增实验记录成功");
+        //todo 新增试验记录区分组织/实验类型
+        //todo important 返回一个实验id
+        /**
+         * 使用params参数加以区分 2019年8月23日10:40:25
+         * 如果params=1 实验为分散实验，组织形式为个人
+         * 如果params=2 实验为集中实验，组织形式为班级
+         */
+        //如果是集中实验
+        if(record.getParams()==2){
+            record.setExperimentType("集中实验");
+            record.setOrganization("班级");
+            int resultCount = experimentRecordDao.insert(record);
+            if(resultCount == 1){
+                return ServerResponse.createBySuccess(record.getId());
+            }
+        }
+
+        //如果是分散实验
+        if(record.getParams() == 1){
+            record.setExperimentType("分散实验");
+            record.setOrganization("个人");
+            int resultCount = experimentRecordDao.insertDispersionExp(record);
+            if(resultCount == 1){
+                return ServerResponse.createBySuccess(record.getId());
+            }
+        }
+
+        return ServerResponse.createBySuccessMsg("新增实验记录失败");
     }
 
     @Override

@@ -6,9 +6,9 @@
     <insert id="insertExpRecord" parameterType="com.simtop.pojo.U3DExpRecord">
         insert into tb_u3d_web_exp_record(experiment_id, park_browsing, smart_storage_browsing,
         device_awareness, order_processing, pick_by_order, pick_by_batch_order, pick_by_disperse,
-        shipping_operation, sorting_operation, total_score, create_time, update_time,user_id)
+        shipping_operation, sorting_operation, total_score, create_time, update_time,user_id,time)
         values (#{experimentId},#{parkBrowsing},#{smartStorageBrowsing},#{deviceAwareness},#{orderProcessing},#{pickByOrder},
-        #{pickByBatchOrder},#{pickByDisperse},#{shippingOperation},#{sortingOperation},#{totalScore},now(),now(),#{userId})
+        #{pickByBatchOrder},#{pickByDisperse},#{shippingOperation},#{sortingOperation},#{totalScore},now(),now(),#{userId},#{time})
     </insert>
 
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.U3DExpRecord">

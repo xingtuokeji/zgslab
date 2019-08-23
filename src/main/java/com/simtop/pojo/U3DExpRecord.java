@@ -29,9 +29,11 @@ public class U3DExpRecord {
     private Double shippingOperation;
     //分拣作业得分
     private Double sortingOperation;
-    //总分
-    private Double totalScore;
+    //总得分
+    private Double totalScore; //试验记录明细表
     //时间戳
+    //实验时长 2019年8月21日11:20:50
+    private Integer time;//试验记录明细表
     private Date createTime;
     private Date updateTime;
     //todo 新增实验大类类型typeId
@@ -39,6 +41,14 @@ public class U3DExpRecord {
     private Integer experimentTypeId;
     //用户id
     private Integer userId;
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
+    }
 
     public Integer getId() {
         return id;
@@ -183,6 +193,7 @@ public class U3DExpRecord {
                 ", shippingOperation=" + shippingOperation +
                 ", sortingOperation=" + sortingOperation +
                 ", totalScore=" + totalScore +
+                ", time=" + time +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", experimentTypeId=" + experimentTypeId +

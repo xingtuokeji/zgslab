@@ -6,6 +6,7 @@
     <select id="checkExpCode" parameterType="string" resultType="int">
         select count(1) from tb_experiment where experiment_code=#{expCode}
     </select>
+    <!--教师新增实验课程 实验名称、课程名称、实验编码、授课教师、实验开始时间、实验结束时间-->
     <insert id="insert" parameterType="com.simtop.pojo.Experiment">
         insert into tb_experiment(course_name, create_time, update_time, username, experiment_code,
         experiment_start_time, experiment_end_time, experiment_name)
@@ -29,6 +30,7 @@
             <if test="experimentCode!=null and experimentCode!=''">and experiment_code like concat(concat('%',#{experimentCode}),'%')</if>
             <if test="courseName!=null and courseName!=''">and course_name like concat(concat('%',#{courseName}),'%')</if>
             <if test="username!=null and username!=''">and username like concat(concat('%',#{username}),'%')</if>
+            <if test="experimentName!=null and experimentName!=''">and experiment_name like concat(concat('%',#{experimentName}),'%')</if>
         </where>
     </select>
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.Experiment">
@@ -41,6 +43,9 @@
         update tb_experiment
         <set>
             <if test="courseName!=null and courseName!=''">course_name=#{courseName},</if>
+            <if test="experimentName!=null and experimentName!=''">experiment_name=#{experimentName},</if>
+            <if test="createTime!=null">create_time=#{createTime},</if>
+            <if test="experimentStartTime!=null">experiment_start_time=#{experimentStartTime},</if>
             update_time=now()
         </set>
         where id=#{id}

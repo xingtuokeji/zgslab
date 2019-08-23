@@ -1,11 +1,16 @@
 package com.simtop.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.util.Date;
 
 /**
  * 实验记录表
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
 public class ExperimentRecord {
+    //用于区分实验类型和组织形式
+    private Integer params;
     //试验记录id
     private Integer id;
     //学生名称
@@ -23,7 +28,46 @@ public class ExperimentRecord {
     //时长
     private Integer time;
     //得分
-    private Double score;
+    private Double totalScore;
+    //关联明细表
+    private U3DExpRecord u3DExpRecord;
+    //实验类型 集中实验/分散实验
+    private String experimentType;
+    //组织形式 班级/个人
+    private String organization;
+
+
+    public Integer getParams() {
+        return params;
+    }
+
+    public void setParams(Integer params) {
+        this.params = params;
+    }
+
+    public String getExperimentType() {
+        return experimentType;
+    }
+
+    public void setExperimentType(String experimentType) {
+        this.experimentType = experimentType;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public U3DExpRecord getU3DExpRecord() {
+        return u3DExpRecord;
+    }
+
+    public void setU3DExpRecord(U3DExpRecord u3DExpRecord) {
+        this.u3DExpRecord = u3DExpRecord;
+    }
 
     public Date getUpdateTime() {
         return updateTime;
@@ -89,18 +133,19 @@ public class ExperimentRecord {
         this.time = time;
     }
 
-    public Double getScore() {
-        return score;
+    public Double getTotalScore() {
+        return totalScore;
     }
 
-    public void setScore(Double score) {
-        this.score = score;
+    public void setTotalScore(Double totalScore) {
+        this.totalScore = totalScore;
     }
 
     @Override
     public String toString() {
         return "ExperimentRecord{" +
-                "id=" + id +
+                "params=" + params +
+                ", id=" + id +
                 ", username='" + username + '\'' +
                 ", school='" + school + '\'' +
                 ", courseName='" + courseName + '\'' +
@@ -108,7 +153,10 @@ public class ExperimentRecord {
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", time=" + time +
-                ", score=" + score +
+                ", totalScore=" + totalScore +
+                ", u3DExpRecord=" + u3DExpRecord +
+                ", experimentType='" + experimentType + '\'' +
+                ", organization='" + organization + '\'' +
                 '}';
     }
 }

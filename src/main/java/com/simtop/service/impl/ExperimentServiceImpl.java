@@ -83,9 +83,9 @@ public class ExperimentServiceImpl implements ExperimentService {
 
     //todo
     @Override
-    public ServerResponse<List<Experiment>> findByParams(Experiment experiment) {
+    public List<Experiment> findByParams(Experiment experiment) {
         List<Experiment> experimentList = experimentDao.findByParams(experiment);
-        return ServerResponse.createBySuccess(experimentList);
+        return experimentList;
     }
 
     @Override

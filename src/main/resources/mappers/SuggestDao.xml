@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.simtop.dao.SuggestDao">
     <insert id="insert" parameterType="com.simtop.pojo.Suggest">
-        insert into tb_evaluate_suggest(username, school, suggest, star, create_time, update_time)
-        values (#{username},#{school},#{suggest},#{star},now(),now())
+        insert into tb_evaluate_suggest(username, school, suggest, star, create_time, update_time,user_id)
+        values (#{username},#{school},#{suggest},#{star},now(),now(),#{userId})
     </insert>
 
     <select id="selectAll" resultType="com.simtop.pojo.Suggest">
@@ -19,7 +19,12 @@
     </delete>
 
     <update id="updateById" parameterType="com.simtop.pojo.Suggest">
-        update tb_evaluate_suggest set suggest=#{suggest}
+        update tb_evaluate_suggest
+        <set>
+            <if test="suggest!=null and suggest !=''">suggest=#{suggest},</if>
+            <if test="star!=null">star=#{star},</if>
+            update_time=now()
+        </set>
         where id=#{id}
     </update>
 
@@ -29,5 +34,12 @@
         where id=#{id}
     </select>
 
+    <select id="checkUserId" parameterType="int" resultType="int">
+        select count(*) from tb_evaluate_suggest where user_id=#{id}
+    </select>
+
+    <select id="countMark" resultType="double">
+        select avg(star) from tb_evaluate_suggest
+    </select>
 </mapper>    
   

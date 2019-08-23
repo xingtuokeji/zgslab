@@ -38,6 +38,7 @@ public class U3DExpRecordController {
     @ResponseBody
     public ServerResponse<String> addExperimentRecordByExpId(@RequestBody U3DExpRecord expRecord, HttpServletRequest request){
         logger.info("u3d正在往web数据库插入实验记录数据"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        logger.info("获取到的试验记录参数为："+expRecord);
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);

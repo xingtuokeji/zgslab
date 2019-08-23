@@ -58,4 +58,14 @@ public class SuggestServiceImpl implements SuggestService {
         }
         return ServerResponse.createBySuccess(suggest);
     }
+
+    @Override
+    public int checkUserId(Integer id) {
+        return suggestDao.checkUserId(id);
+    }
+
+    @Override
+    public ServerResponse<Double> countMark() {
+        return ServerResponse.createBySuccess(suggestDao.countMark());
+    }
 }

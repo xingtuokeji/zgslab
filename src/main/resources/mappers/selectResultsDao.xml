@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simtop.dao.ReportEchartsDao">
+    <select id="selectResults" resultType="com.simtop.pojo.ExperimentResult" parameterType="map">
+        select id,user_id,experiment_id,experiment_times,worker,zbs_effective_time,zbs_total_pick_time,zbs_efficiency,zbs_walk_step,
+        zqs_effective_time,zqs_total_pick_time,zqs_efficiency,zqs_walk_step,
+        bzs_effective_time,bzs_total_pick_time,bzs_efficiency,bzs_walk_step from tb_u3d_web_exp_result where user_id=#{userId}
+        and experiment_times=#{experimentTimes} and experiment_id=#{experimentId}
+    </select>
+</mapper>    
