@@ -5,4 +5,7 @@ import com.simtop.pojo.Report;
 
 public interface ReportService {
     ServerResponse<Report> selectByReportHeader(Integer experimentId);
+
+    ServerResponse<String> addExpReportHeader(Report reportHeader);
+
 }

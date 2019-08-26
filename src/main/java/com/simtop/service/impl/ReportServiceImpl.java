@@ -21,4 +21,13 @@ public class ReportServiceImpl implements ReportService {
         System.out.println(reportHeader);
         return ServerResponse.createBySuccess(reportHeader);
     }
+
+    @Override
+    public ServerResponse<String> addExpReportHeader(Report reportHeader) {
+        int resultCount = reportDao.insertReportHeader(reportHeader);
+        if(resultCount != 1){
+            return ServerResponse.createByErrorMsg("插入数据失败");
+        }
+        return ServerResponse.createBySuccessMsg("插入数据成功");
+    }
 }

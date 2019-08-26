@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class Report {
     private Integer id;
+    private Integer experimentId;
     private String school;
     private String courseName;
     private String username;
@@ -14,6 +15,24 @@ public class Report {
     private String organization;
     private Date date;
     private Integer score;
+    private String conclusion;
+
+
+    public Integer getExperimentId() {
+        return experimentId;
+    }
+
+    public void setExperimentId(Integer experimentId) {
+        this.experimentId = experimentId;
+    }
+
+    public String getConclusion() {
+        return conclusion;
+    }
+
+    public void setConclusion(String conclusion) {
+        this.conclusion = conclusion;
+    }
 
     public Integer getId() {
         return id;
@@ -83,6 +102,7 @@ public class Report {
     public String toString() {
         return "Report{" +
                 "id=" + id +
+                ", experimentId=" + experimentId +
                 ", school='" + school + '\'' +
                 ", courseName='" + courseName + '\'' +
                 ", username='" + username + '\'' +
@@ -90,6 +110,7 @@ public class Report {
                 ", organization='" + organization + '\'' +
                 ", date=" + date +
                 ", score=" + score +
+                ", conclusion='" + conclusion + '\'' +
                 '}';
     }
 }

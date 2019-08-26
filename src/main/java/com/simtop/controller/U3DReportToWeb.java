@@ -84,4 +84,23 @@ public class U3DReportToWeb {
         return ServerResponse.createBySuccess(experimentRecordList);
     }
 
+    /**
+     * 实验记录查询
+     * @param id
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/findById",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<ExperimentRecord> findById(Integer id, HttpServletRequest request){
+        //todo
+        String token = request.getHeader("Authorization");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        return experimentRecordService.findById(id);
+    }
+
 }
