@@ -6,17 +6,37 @@ import java.util.Date;
  * 报告表头
  */
 public class Report {
+    //报告表头主键id
     private Integer id;
+    //实验id
     private Integer experimentId;
+    //学校
     private String school;
+    //课程名
     private String courseName;
+    //用户姓名
     private String username;
+    //教师姓名
     private String teacherName;
+    //组织名
     private String organization;
+    //创建时间
     private Date date;
+    //报告得分
     private Integer score;
+    //实验记录
     private String conclusion;
 
+    //用户评星
+    private Integer star;
+
+    public Integer getStar() {
+        return star;
+    }
+
+    public void setStar(Integer star) {
+        this.star = star;
+    }
 
     public Integer getExperimentId() {
         return experimentId;
@@ -111,6 +131,7 @@ public class Report {
                 ", date=" + date +
                 ", score=" + score +
                 ", conclusion='" + conclusion + '\'' +
+                ", star=" + star +
                 '}';
     }
 }

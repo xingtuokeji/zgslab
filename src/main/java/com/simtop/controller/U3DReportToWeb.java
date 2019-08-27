@@ -85,6 +85,22 @@ public class U3DReportToWeb {
     }
 
     /**
+     * 2019年8月27日09:27:15 根据实验id删除报告信息
+     */
+    @RequestMapping(value = "/deleteByExpId",method = RequestMethod.DELETE)
+    @ResponseBody
+    public ServerResponse<String> deleteReportByExpId(HttpServletRequest request,Integer id){
+        String token = request.getHeader("Authorization");
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        return experimentRecordService.deleteById(id);
+    }
+
+
+    /**
      * 实验记录查询
      * @param id
      * @param request

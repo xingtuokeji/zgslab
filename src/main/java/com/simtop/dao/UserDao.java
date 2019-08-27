@@ -28,4 +28,6 @@ public interface UserDao {
     List<User> selectByParams(User user);
 
     int selectUserCounts();
+
+    User findById(Integer id);
 }

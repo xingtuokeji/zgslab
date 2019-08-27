@@ -98,7 +98,7 @@ public class QuestionController {
     /**
      * 多参数查询问题 姓名、学校、实验问题 todo 分页功能 已完成！
      */
-    @RequestMapping(value = "/findByParams",method = RequestMethod.POST)
+    @RequestMapping(value = "/findByParams",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<PageInfo<Question>> findByParams(Question question,HttpServletRequest request,Integer pageSize,Integer pageNum){
         String token = request.getHeader("Authorization");

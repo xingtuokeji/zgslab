@@ -39,7 +39,7 @@
     </select>
 
     <select id="countMark" resultType="double">
-        select avg(star) from tb_evaluate_suggest
+        select avg(star) from tb_report
     </select>
 </mapper>    
   

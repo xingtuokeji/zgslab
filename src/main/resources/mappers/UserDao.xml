@@ -42,14 +42,14 @@
         where email=#{email}
     </update>
 
-    <select id="selectAll" resultMap="result">
-        select tu.id 'tu.id',tu.username,tu.login_name,tu.password,tu.email,tr.id 'tr.id',tu.create_time,tu.update_time,
-        tu.school,tu.province,tu.city,tu.address from tb_user tu left join tb_role tr on tu.role_id=tr.id
+    <select id="selectAll" resultType="com.simtop.pojo.User">
+        select id, username, login_name, password, email, role_id, create_time, update_time, school, address
+        from tb_user
     </select>
 
-    <select id="selectByParams" parameterType="com.simtop.pojo.User" resultMap="result">
-        select tu.id 'tu.id',tu.username,tu.login_name,tu.password,tu.email,tr.id 'tr.id',tu.create_time,tu.update_time,
-        tu.school,tu.province,tu.city,tu.address from tb_user tu left join tb_role tr on tu.role_id=tr.id
+    <select id="selectByParams" parameterType="com.simtop.pojo.User" resultType="com.simtop.pojo.User">
+       select id, username, login_name, password, email, role_id, create_time, update_time, school,address
+       from tb_user
         <where>
             <if test="username!=null and username!=''">and username like concat(concat('%',#{username}),'%')</if>
             <if test="loginName!=null and loginName!=''">and login_name like concat(concat('%',#{loginName}),'%')</if>
@@ -59,7 +59,7 @@
 
     <insert id="insertBackUser" parameterType="com.simtop.pojo.User">
         insert into tb_user(username, login_name, password, email, role_id, create_time, update_time, school,address)
-        values (#{username},#{loginName},#{password},null,#{email},#{roleId.id},now(),now(),#{school},#{address})
+        values (#{username},#{loginName},#{password},#{email},#{roleId},now(),now(),#{school},#{address})
     </insert>
 
     <delete id="deleteByUserId" parameterType="int">
@@ -82,6 +82,12 @@
 
     <select id="selectUserCounts" resultType="int">
         select count(*) from tb_user;
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.simtop.pojo.User">
+        select id, username, login_name, password, email, role_id, create_time, update_time, school, address
+        from tb_user
+        where id=#{id}
     </select>
 
 </mapper>    

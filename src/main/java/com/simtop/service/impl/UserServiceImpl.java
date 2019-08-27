@@ -6,6 +6,7 @@ import com.simtop.pojo.Role;
 import com.simtop.pojo.SmsPojo;
 import com.simtop.pojo.User;
 import com.simtop.service.UserService;
+import com.simtop.util.AliyunMailUtil;
 import com.simtop.util.SmsRandomCodeUtil;
 import com.simtop.util.SmsUtil;
 import com.simtop.vo.UserParamsVo;
@@ -93,19 +94,20 @@ public class UserServiceImpl implements UserService {
             //生成随机的6位数字验证码
             String verificationCode= SmsRandomCodeUtil.generateRandomSixNum();
             //调用邮箱发送
-            SmsPojo smsPojo = new SmsPojo();
-            smsPojo.setToAddress(email);
-            smsPojo.setSubject("用户注册");
-            smsPojo.setContent("注册码为："+verificationCode);
-            if(SmsUtil.sendTextMail(smsPojo)){
+            AliyunMailUtil.sendMail(email,"浙工商lab用户注册","您的验证码为："+verificationCode+"。"+"<br><br>"+"本邮件是系统自动发送的，请勿直接回复！感谢您的注册，祝您使用愉快！");
+//            SmsPojo smsPojo = new SmsPojo();
+//            smsPojo.setToAddress(email);
+//            smsPojo.setSubject("用户注册");
+//            smsPojo.setContent("注册码为："+verificationCode);
+//            if(SmsUtil.sendTextMail(smsPojo)){
                 //发送成功保存邮箱地址对应的验证码 todo 已解决
                 // redis中保存邮箱验证码三分钟
                 redisTemplate.boundValueOps("email").set(verificationCode,180,TimeUnit.SECONDS);
                 // todo 发送的验证码拼接了之前的验证码？？ 获取content内容时候出现getContent现象
                 return ServerResponse.createBySuccess(verificationCode);
-            }else{
-                return ServerResponse.createByErrorMsg("邮件发送失败");
-            }
+//            }else{
+//                return ServerResponse.createByErrorMsg("邮件发送失败");
+//            }
         }
     }
 
@@ -116,7 +118,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse<String> forgetSendEmailCode(String email) {
-        System.out.println("进入到这里");
         //邮箱非空验证
         if(email==null||"".equals(email)){
             return ServerResponse.createByErrorMsg("邮箱不能为空,请填入有效地址");
@@ -124,24 +125,24 @@ public class UserServiceImpl implements UserService {
         //生成随机的验证码
         String verificationCode= SmsRandomCodeUtil.generateRandomSixNum();
         //调用邮箱发送
-        SmsPojo smsPojo = new SmsPojo();
-        smsPojo.setToAddress(email);
-        smsPojo.setSubject("忘记密码");
-        smsPojo.setContent("验证码为："+verificationCode);
-        if(SmsUtil.sendTextMail(smsPojo)){
+        AliyunMailUtil.sendMail(email,"浙工商lab密码重置","您的验证码为："+verificationCode+"。"+"<br><br>"+"本邮件是系统自动发送的，请勿直接回复！");
+//        SmsPojo smsPojo = new SmsPojo();
+//        smsPojo.setToAddress(email);
+//        smsPojo.setSubject("忘记密码");
+//        smsPojo.setContent("验证码为："+verificationCode);
+//        if(SmsUtil.sendTextMail(smsPojo)){
             //发送成功保存邮箱地址对应的验证码 todo 3分钟 已解决
             redisTemplate.boundValueOps("forget_email").set(verificationCode,180,TimeUnit.SECONDS);
-            System.out.println(redisTemplate.boundValueOps("forget_email").get());
             return ServerResponse.createBySuccess(verificationCode);
-        }else{
-            return ServerResponse.createByErrorMsg("邮件发送失败");
-        }
+//        }else{
+//            return ServerResponse.createByErrorMsg("邮件发送失败");
+//        }
     }
 
     @Override
-    public ServerResponse<List<User>> findAll() {
+    public List<User> findAll() {
         List<User> userList = userDao.selectAll();
-        return ServerResponse.createBySuccess(userList);
+        return userList;
     }
 
     @Override
@@ -198,19 +199,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServerResponse<List<User>> findByParams(UserParamsVo params) {
+    public List<User> findByParams(UserParamsVo params) {
         User user = new User();
         user.setUsername(params.getUsername());
         user.setSchool(params.getSchool());
         user.setLoginName(params.getLoginName());
         List<User> userList = userDao.selectByParams(user);
-        return ServerResponse.createBySuccess(userList);
+        return userList;
     }
 
     @Override
     public ServerResponse<Integer> accountUser() {
         int count = userDao.selectUserCounts();
         return ServerResponse.createBySuccess(count);
+    }
+
+    @Override
+    public ServerResponse<User> findById(Integer id) {
+        User user = userDao.findById(id);
+        if(user == null){
+            return ServerResponse.createByErrorMsg("查询用户失败");
+        }
+        return ServerResponse.createBySuccess(user);
     }
 
     @Override

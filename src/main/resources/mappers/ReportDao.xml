@@ -11,8 +11,8 @@
     </select>
 
     <insert id="insertReportHeader" parameterType="com.simtop.pojo.Report">
-        insert into tb_report(school, course_name, username, teacher_name, organization, date, score, experiment_id, conclusion)
-        values (#{school},#{courseName},#{username},#{teacherName},#{organization},now(),#{score},#{experimentId},#{conclusion})
+        insert into tb_report(school, course_name, username, teacher_name, organization, date, score, experiment_id, conclusion,star)
+        values (#{school},#{courseName},#{username},#{teacherName},#{organization},now(),#{score},#{experimentId},#{conclusion},#{star})
     </insert>
 
 </mapper>    

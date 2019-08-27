@@ -17,7 +17,7 @@ public interface UserService {
 
     ServerResponse<String> forgetSendEmailCode(String email);
 
-    ServerResponse<List<User>> findAll();
+    List<User> findAll();
 
     ServerResponse<String> insertBackUser(UserVo userVo);
 
@@ -25,7 +25,9 @@ public interface UserService {
 
     ServerResponse<String> updateBackendUser(UserVo userVo);
 
-    ServerResponse<List<User>> findByParams(UserParamsVo params);
+    List<User> findByParams(UserParamsVo params);
 
     ServerResponse<Integer> accountUser();
+
+    ServerResponse<User> findById(Integer id);
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -66,6 +67,10 @@ public class SuggestServiceImpl implements SuggestService {
 
     @Override
     public ServerResponse<Double> countMark() {
-        return ServerResponse.createBySuccess(suggestDao.countMark());
+        double score = suggestDao.countMark();//4.333
+        System.out.println(score);
+        double result = new BigDecimal(score).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+        System.out.println(result);
+        return ServerResponse.createBySuccess(result);
     }
 }

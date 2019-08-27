@@ -1,5 +1,7 @@
 package com.simtop.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
 import com.simtop.pojo.User;
 import com.simtop.service.JwtLoginService;
@@ -9,6 +11,7 @@ import com.simtop.vo.UserParamsVo;
 import com.simtop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,25 +44,25 @@ public class UserController {
         /**
          * 接受前台时候出现乱码问题 进行硬编码 todo 2019年8月19日17:38:20 中文参数乱码问题 important
          */
-        String school = new String(request.getParameter("school").getBytes("ISO-8859-1"),"utf-8");
-        String province = new String(request.getParameter("province").getBytes("ISO-8859-1"),"utf-8");
-        String city = new String(request.getParameter("city").getBytes("ISO-8859-1"),"utf-8");
-        String username = new String(request.getParameter("username").getBytes("ISO-8859-1"),"utf-8");
-        userVo.setSchool(school);
-        userVo.setProvince(province);
-        userVo.setCity(city);
-        userVo.setUsername(username);
+//        String school = new String(request.getParameter("school").getBytes("ISO-8859-1"),"utf-8");
+//        String province = new String(request.getParameter("province").getBytes("ISO-8859-1"),"utf-8");
+//        String city = new String(request.getParameter("city").getBytes("ISO-8859-1"),"utf-8");
+//        String username = new String(request.getParameter("username").getBytes("ISO-8859-1"),"utf-8");
+//        userVo.setSchool(school);
+//        userVo.setProvince(province);
+//        userVo.setCity(city);
+//        userVo.setUsername(username);
         return userService.register(userVo);
     }
 
     /**
      * 注册时 1、获取后台生成的验证码
-     * 参数需要安全，接口安全 POST
+     * 参数需要安全，接口安全
      * @return
      */
-    @RequestMapping(value = "/checkCode",method = RequestMethod.POST)
+    @RequestMapping(value = "/checkCode",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<String> sendEmailCode(@RequestBody String email){
+    public ServerResponse<String> sendEmailCode(String email){
         //根据邮箱获取验证码
         return userService.generateCheckCode(email);
     }
@@ -87,9 +90,9 @@ public class UserController {
      * 忘记密码时获取验证码 邮箱验证码
      *
      */
-    @RequestMapping(value = "/forget_checkCode",method = RequestMethod.POST)
+    @RequestMapping(value = "/forget_checkCode",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<String> forgetSendEmailCode(@RequestBody String email){
+    public ServerResponse<String> forgetSendEmailCode( String email){
         //根据邮箱获取验证码
         return userService.forgetSendEmailCode(email);
     }
@@ -106,16 +109,22 @@ public class UserController {
     /**
      * 用户管理 查看所有的数据
      */
-    @RequestMapping(value = "/findAll",method = RequestMethod.GET)
+    @RequestMapping(value = "/backend/findAll",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<List<User>> findAll(Integer userId, HttpServletRequest request){
+    public ServerResponse<PageInfo<User>> findAll(Integer userId, HttpServletRequest request, Integer pageNum, Integer pageSize){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-        return userService.findAll();
+        if(ObjectUtils.isEmpty(pageNum)){
+            pageNum = 1;
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<User> userList = userService.findAll();
+        PageInfo<User> pageInfo = new PageInfo<User>(userList);
+        return ServerResponse.createBySuccess(pageInfo);
     }
     /**
      * 新增后台用户管理记录
@@ -148,7 +157,14 @@ public class UserController {
         return userService.deleteByUserId(id);
     }
 
-    @RequestMapping(value = "/backend/update",method = RequestMethod.POST)
+    /**
+     * 修改用户信息
+     * @param userVo
+     * @param userId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/backend/update",method = RequestMethod.PUT)
     @ResponseBody
     public ServerResponse<String> updateBackendUser(@RequestBody UserVo userVo,Integer userId, HttpServletRequest request){
         String token = request.getHeader("Authorization");
@@ -161,18 +177,40 @@ public class UserController {
     }
 
     /**
+     * 根据用户id查询用户信息
+     */
+
+    @RequestMapping(value = "/backend/findById",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<User> findUserById(HttpServletRequest request,Integer id){
+        String token = request.getHeader("Authorization");
+        if(token == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User u = JwtUtil.unsign(jwt,User.class);
+        if(u == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        return userService.findById(id);
+    }
+
+    /**
      * 用户查询功能(学校、姓名、登录名查询)
      */
-    @RequestMapping(value = "/backend/findByParams",method = RequestMethod.POST)
+    @RequestMapping(value = "/backend/findByParams",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<List<User>> findByParams(@RequestBody HttpServletRequest request, UserParamsVo params){
+    public ServerResponse<PageInfo<User>> findByParams(HttpServletRequest request, UserParamsVo params,Integer pageNum,Integer pageSize){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-       return userService.findByParams(params);
+        PageHelper.startPage(pageNum,pageSize);
+        List<User> userList = userService.findByParams(params);
+        PageInfo<User> pageInfo = new PageInfo<User>(userList);
+       return ServerResponse.createBySuccess(pageInfo);
     }
     /**
      * 统计功能：统计用户总数量
