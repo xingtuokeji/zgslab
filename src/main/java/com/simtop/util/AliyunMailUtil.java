@@ -10,19 +10,19 @@ import java.util.Properties;
  */
 public class AliyunMailUtil {
     private static final String ALIDM_SMTP_HOST = "smtpdm.aliyun.com";
-    private static final String ALIDM_SMTP_PORT = "25";
+//    private static final String ALIDM_SMTP_PORT = "25"; //todo 25端口阿里云封掉了
 
     public static void sendMail(String email,String subject,String content) {
         // 配置发送邮件的环境属性
         final Properties props = new Properties();
         // 表示SMTP发送邮件，需要进行身份验证
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.host", ALIDM_SMTP_HOST);
-        props.put("mail.smtp.port", ALIDM_SMTP_PORT);
-        // 如果使用ssl，则去掉使用25端口的配置，进行如下配置,
-        // props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        // props.put("mail.smtp.socketFactory.port", "465");
-        // props.put("mail.smtp.port", "465");
+          props.put("mail.smtp.auth", "true");
+          props.put("mail.smtp.host", ALIDM_SMTP_HOST);
+//        props.put("mail.smtp.port", ALIDM_SMTP_PORT);
+        // 如果使用ssl，则去掉使用25端口的配置，进行如下配置, todo important 转用 465端口
+         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+         props.put("mail.smtp.socketFactory.port", "465");
+         props.put("mail.smtp.port", "465");
         // 发件人的账号，填写控制台配置的发信地址,比如xxx@xxx.com
         props.put("mail.user", "simtop@aldm.simtop.com.cn");
         // 访问SMTP服务时需要提供的密码(在控制台选择发信地址进行设置)

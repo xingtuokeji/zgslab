@@ -43,12 +43,12 @@
     </update>
 
     <select id="selectAll" resultType="com.simtop.pojo.User">
-        select id, username, login_name, password, email, role_id, create_time, update_time, school, address
+        select id, username, login_name, password, email, role_id, create_time, update_time, school, province,city
         from tb_user
     </select>
 
     <select id="selectByParams" parameterType="com.simtop.pojo.User" resultType="com.simtop.pojo.User">
-       select id, username, login_name, password, email, role_id, create_time, update_time, school,address
+       select id, username, login_name, password, email, role_id, create_time, update_time, school,province,city
        from tb_user
         <where>
             <if test="username!=null and username!=''">and username like concat(concat('%',#{username}),'%')</if>
@@ -58,8 +58,8 @@
     </select>
 
     <insert id="insertBackUser" parameterType="com.simtop.pojo.User">
-        insert into tb_user(username, login_name, password, email, role_id, create_time, update_time, school,address)
-        values (#{username},#{loginName},#{password},#{email},#{roleId},now(),now(),#{school},#{address})
+        insert into tb_user(username, login_name, password, email, role_id, create_time, update_time, school,province,city)
+        values (#{username},#{loginName},#{password},#{email},#{roleId},now(),now(),#{school},#{province},#{city})
     </insert>
 
     <delete id="deleteByUserId" parameterType="int">
@@ -75,7 +75,8 @@
             <if test="password!=null and password!=''">password=#{password},</if>
             <if test="email!=null and email!=''">email=#{email},</if>
             <if test="school!=null and school!=''">school=#{school},</if>
-            <if test="address!=null and address!=''">address=#{address}</if>
+            <if test="province!=null and province!=''">province=#{province},</if>
+            <if test="city!=null and city!=''">city=#{city}</if>
         </set>
         where id=#{id}
     </update>
@@ -85,7 +86,7 @@
     </select>
 
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.User">
-        select id, username, login_name, password, email, role_id, create_time, update_time, school, address
+        select id, username, login_name, password, email, role_id, create_time, update_time, school,province,city
         from tb_user
         where id=#{id}
     </select>

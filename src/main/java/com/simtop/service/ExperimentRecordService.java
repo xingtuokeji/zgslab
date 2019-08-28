@@ -2,11 +2,11 @@ package com.simtop.service;
 
 import com.simtop.common.ServerResponse;
 import com.simtop.pojo.ExperimentRecord;
+import com.simtop.pojo.U3DExpRecord;
 
 import java.util.List;
 
 public interface ExperimentRecordService {
-    ServerResponse<ExperimentRecord> findById(Integer id);
 
     ServerResponse<Integer> add(ExperimentRecord record);
 
@@ -20,4 +20,5 @@ public interface ExperimentRecordService {
 
     List<ExperimentRecord> selectByExperimentId();
 
+    List<ExperimentRecord> findByParams(ExperimentRecord record);
 }

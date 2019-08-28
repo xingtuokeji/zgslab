@@ -1,5 +1,6 @@
 package com.simtop.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simtop.controller.U3DReportToWeb;
 
 import java.util.Date;
@@ -8,9 +9,10 @@ import java.util.Date;
  * 实验记录表
  */
 public class ExperimentRecord {
+    @JsonIgnore
     //用于区分实验类型和组织形式
     private Integer params;
-    //试验记录id
+    //课程id
     private Integer id;
     //学生名称
     private String username;
@@ -37,6 +39,16 @@ public class ExperimentRecord {
     //关联报告表
     private U3DReportToWeb u3DReportToWeb;
 
+    //新增实验编码
+    private String experimentCode;
+
+    public String getExperimentCode() {
+        return experimentCode;
+    }
+
+    public void setExperimentCode(String experimentCode) {
+        this.experimentCode = experimentCode;
+    }
 
     public U3DReportToWeb getU3DReportToWeb() {
         return u3DReportToWeb;
@@ -167,6 +179,7 @@ public class ExperimentRecord {
                 ", experimentType='" + experimentType + '\'' +
                 ", organization='" + organization + '\'' +
                 ", u3DReportToWeb=" + u3DReportToWeb +
+                ", experimentCode='" + experimentCode + '\'' +
                 '}';
     }
 }

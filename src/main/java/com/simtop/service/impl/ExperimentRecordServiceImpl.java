@@ -1,8 +1,10 @@
 package com.simtop.service.impl;
 
 import com.simtop.common.ServerResponse;
+import com.simtop.dao.ExperimentDao;
 import com.simtop.dao.ExperimentRecordDao;
 import com.simtop.pojo.ExperimentRecord;
+import com.simtop.pojo.U3DExpRecord;
 import com.simtop.service.ExperimentRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,9 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
     @Autowired
     private ExperimentRecordDao experimentRecordDao;
 
-    @Override
-    public ServerResponse<ExperimentRecord> findById(Integer id) {
-        ExperimentRecord record = experimentRecordDao.findById(id);
-        return ServerResponse.createBySuccess(record);
-    }
+    @Autowired
+    private ExperimentDao experimentDao;
+
 
     @Override
     public ServerResponse<Integer> add(ExperimentRecord record) {
@@ -40,6 +40,13 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
         if(record.getParams()==2){
             record.setExperimentType("集中实验");
             record.setOrganization("班级");
+            //todo 根据传入的课程id，查询到实验编码
+            String expCode = experimentDao.findExpCodeByExpId(record.getId());
+            if(expCode == null){
+                return ServerResponse.createByErrorMsg("根据课程id查询实验编码错误");
+            }
+            // todo 将实验编码放置于实体类 ExperimentRecord中
+            record.setExperimentCode(expCode);
             int resultCount = experimentRecordDao.insert(record);
             if(resultCount == 1){
                 return ServerResponse.createBySuccess(record.getId());
@@ -90,5 +97,11 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
     public List<ExperimentRecord> selectByExperimentId() {
         List<ExperimentRecord> experimentRecords = experimentRecordDao.selectByExperimentId();
         return experimentRecords;
+    }
+
+    @Override
+    public List<ExperimentRecord> findByParams(ExperimentRecord record) {
+        List<ExperimentRecord> experimentRecordList = experimentRecordDao.selectByParams(record);
+        return experimentRecordList;
     }
 }

@@ -58,5 +58,10 @@
         where experiment_code=#{experimentCode}
     </select>
 
+    <select id="findExpCodeByExpId" parameterType="int" resultType="string">
+        select experiment_code
+        from tb_experiment
+        where id=#{id}
+    </select>
 </mapper>    
   

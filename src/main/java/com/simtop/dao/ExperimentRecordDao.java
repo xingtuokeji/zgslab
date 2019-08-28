@@ -21,4 +21,5 @@ public interface ExperimentRecordDao {
 
     List<ExperimentRecord> selectByExperimentId();
 
+    List<ExperimentRecord> selectByParams(ExperimentRecord record);
 }

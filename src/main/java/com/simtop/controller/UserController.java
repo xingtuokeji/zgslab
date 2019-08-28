@@ -145,7 +145,7 @@ public class UserController {
      * 根据用户id删除User表数据
      */
 
-    @RequestMapping(value = "/deleteByUserId",method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteByUserId",method = RequestMethod.DELETE)
     @ResponseBody
     public ServerResponse<String> deleteById(Integer userId, HttpServletRequest request,Integer id){
         String token = request.getHeader("Authorization");

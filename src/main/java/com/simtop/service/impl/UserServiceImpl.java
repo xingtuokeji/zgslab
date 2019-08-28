@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -101,10 +103,15 @@ public class UserServiceImpl implements UserService {
 //            smsPojo.setContent("注册码为："+verificationCode);
 //            if(SmsUtil.sendTextMail(smsPojo)){
                 //发送成功保存邮箱地址对应的验证码 todo 已解决
-                // redis中保存邮箱验证码三分钟
-                redisTemplate.boundValueOps("email").set(verificationCode,180,TimeUnit.SECONDS);
+                // redis中保存邮箱验证码三分钟 todo 解决安全 一个email对应唯一的验证码
+//            Map<String,String> map = new HashMap<>();
+//            map.put(email,verificationCode);
+//            redisTemplate.opsForHash().putAll("email",map);
+            redisTemplate.expire(email,180,TimeUnit.SECONDS);
+//                redisTemplate.boundValueOps("email").set(verificationCode,180,TimeUnit.SECONDS);
                 // todo 发送的验证码拼接了之前的验证码？？ 获取content内容时候出现getContent现象
-                return ServerResponse.createBySuccess(verificationCode);
+            // todo 2019年8月28日09:23:18 接口中屏蔽验证码
+                return ServerResponse.createBySuccess();
 //            }else{
 //                return ServerResponse.createByErrorMsg("邮件发送失败");
 //            }
@@ -157,7 +164,6 @@ public class UserServiceImpl implements UserService {
         user.setProvince(userVo.getProvince());
         user.setCity(userVo.getCity());
         user.setEmail(userVo.getEmail());
-        user.setAddress(userVo.getAddress());
         int resultCount = userDao.insertBackUser(user);
         if(resultCount != 1){
             return ServerResponse.createBySuccess("新增后台用户失败");

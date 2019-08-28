@@ -1,5 +1,7 @@
 package com.simtop.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
 import com.simtop.interceptor.ExperimentResultService;
 import com.simtop.pojo.ExperimentRecord;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +71,7 @@ public class U3DReportToWeb {
     }
 
     /**
+     * 报告模块
      * 根据实验id显示生成的报告
      */
     @RequestMapping(value = "/showReport",method = RequestMethod.GET)
@@ -79,13 +83,14 @@ public class U3DReportToWeb {
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-        //关联查询报告表和实验记录表显示已经出报告的数据
+        // todo 关联查询报告表和实验记录表显示已经出报告的数据
         List<ExperimentRecord> experimentRecordList = experimentRecordService.selectByExperimentId();
         return ServerResponse.createBySuccess(experimentRecordList);
     }
 
     /**
      * 2019年8月27日09:27:15 根据实验id删除报告信息
+     * 报告模块，试验记录信息 也被删除
      */
     @RequestMapping(value = "/deleteByExpId",method = RequestMethod.DELETE)
     @ResponseBody
@@ -106,17 +111,41 @@ public class U3DReportToWeb {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/findById",method = RequestMethod.GET)
+//    @RequestMapping(value = "/findById",method = RequestMethod.GET)
+//    @ResponseBody
+//    public ServerResponse<ExperimentRecord> findById(Integer id, HttpServletRequest request){
+//        //todo
+//        String token = request.getHeader("Authorization");
+//        String jwt = token.substring(token.lastIndexOf(" ")+1);
+//        User u = JwtUtil.unsign(jwt,User.class);
+//        if(u == null){
+//            return ServerResponse.createByErrorMsg("token无效");
+//        }
+//        return experimentRecordService.findById(id);
+//    }
+
+    /**
+     * 根据用户姓名、实验编码、实验名称查询试验记录
+     */
+    @RequestMapping(value = "/findByParams",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<ExperimentRecord> findById(Integer id, HttpServletRequest request){
-        //todo
+    public ServerResponse<PageInfo<ExperimentRecord>> findByParams(HttpServletRequest request, ExperimentRecord record, Integer pageNum, Integer pageSize){
         String token = request.getHeader("Authorization");
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User u = JwtUtil.unsign(jwt,User.class);
-        if(u == null){
+        if(token == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-        return experimentRecordService.findById(id);
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User user = JwtUtil.unsign(jwt,User.class);
+        if(user == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
+        if(ObjectUtils.isEmpty(pageNum)){
+            pageNum = 1;
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
 import com.simtop.dao.ExperimentRecordDao;
+import com.simtop.pojo.Experiment;
 import com.simtop.pojo.ExperimentRecord;
 import com.simtop.pojo.User;
 import com.simtop.service.ExperimentRecordService;
@@ -34,21 +35,9 @@ public class ExperimentRecordController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/findById",method = RequestMethod.GET)
-    @ResponseBody
-    public ServerResponse<ExperimentRecord> findById(Integer id, HttpServletRequest request){
-        //todo
-        String token = request.getHeader("Authorization");
-        String jwt = token.substring(token.lastIndexOf(" ")+1);
-        User u = JwtUtil.unsign(jwt,User.class);
-        if(u == null){
-            return ServerResponse.createByErrorMsg("token无效");
-        }
-        return experimentRecordService.findById(id);
-    }
 
     /**
-     * 新增一条实验记录
+     * 新增一条实验记录 (加入实验编码)
      * 区分组织形式（班级/个人）、实验类型（集中/分散） 通过参数来区分
      * @param request
      * @param record
@@ -97,6 +86,9 @@ public class ExperimentRecordController {
     @ResponseBody
     public ServerResponse<String> deleteById(HttpServletRequest request,Integer id){
         String token = request.getHeader("Authorization");
+        if(token == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
@@ -135,5 +127,29 @@ public class ExperimentRecordController {
             return ServerResponse.createByErrorMsg("token无效");
         }
         return experimentRecordService.countTotalExpTime();
+    }
+
+    /**
+     * 根据用户姓名、实验编码、实验名称查询试验记录
+     */
+    @RequestMapping(value = "/findByParams",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo<ExperimentRecord>> findByParams(HttpServletRequest request,ExperimentRecord record,Integer pageNum,Integer pageSize){
+        String token = request.getHeader("Authorization");
+        if(token == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        String jwt = token.substring(token.lastIndexOf(" ")+1);
+        User user = JwtUtil.unsign(jwt,User.class);
+        if(user == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
+        List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
+        if(ObjectUtils.isEmpty(pageNum)){
+            pageNum = 1;
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 }
