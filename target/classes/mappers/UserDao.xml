@@ -37,8 +37,10 @@
         school,province,city from tb_user
         where login_name=#{loginName} or email=#{email}
     </select>
+
+    <!--更新密码时，根据已存在的邮箱更新，同时更新修改时间字段-->
     <update id="updatePasswordByEmail" parameterType="com.simtop.pojo.User">
-        update tb_user set password=#{password}
+        update tb_user set password=#{password},update_time=now()
         where email=#{email}
     </update>
 

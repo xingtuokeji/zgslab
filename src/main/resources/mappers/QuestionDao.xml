@@ -13,6 +13,7 @@
             <id property="id" column="tc.id"/>
             <result property="comment" column="comment"/>
             <result property="questionId" column="question_id"/>
+            <result property="createTime" column="create_time"/>
         </collection>
     </resultMap>
 
@@ -28,7 +29,7 @@
     </select>
 
     <select id="selectAll" parameterType="int" resultMap="result">
-        select tq.id 'tq.id',tq.question,tq.school,tq.create_time,tc.id 'tc.id',tc.comment
+        select tq.id 'tq.id',tq.question,tq.school,tq.create_time,tc.id 'tc.id',tc.comment,tc.create_time
         from tb_question tq left join tb_comment tc
         on tq.id=tc.question_id where tq.id=#{id}
     </select>

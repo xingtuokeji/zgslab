@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             return ServerResponse.createByErrorMsg("验证码不能为空");
         }
         //前端传递的验证码和redis中的checkCode进行比对
-        if(!userVo.getCheckCode().equals(redisTemplate.boundValueOps("email").get())){
+        if(!userVo.getCheckCode().equals(redisTemplate.boundValueOps("email_"+userVo.getEmail()).get())){
             return ServerResponse.createByErrorMsg("验证码错误");
         }
         if(userVo.getLoginName()==null || userVo.getLoginName().equals("")){
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
             //生成随机的6位数字验证码
             String verificationCode= SmsRandomCodeUtil.generateRandomSixNum();
             //调用邮箱发送
-            AliyunMailUtil.sendMail(email,"浙工商lab用户注册","您的验证码为："+verificationCode+"。"+"<br><br>"+"本邮件是系统自动发送的，请勿直接回复！感谢您的注册，祝您使用愉快！");
+            AliyunMailUtil.sendMail(email,"浙工商lab用户注册","您的验证码为："+verificationCode+"。此验证码三分钟内有效，请及时注册。"+"<br><br>"+"本邮件是系统自动发送的，请勿直接回复！感谢您的注册，祝您使用愉快！");
 //            SmsPojo smsPojo = new SmsPojo();
 //            smsPojo.setToAddress(email);
 //            smsPojo.setSubject("用户注册");
@@ -106,9 +106,8 @@ public class UserServiceImpl implements UserService {
                 // redis中保存邮箱验证码三分钟 todo 解决安全 一个email对应唯一的验证码
 //            Map<String,String> map = new HashMap<>();
 //            map.put(email,verificationCode);
-//            redisTemplate.opsForHash().putAll("email",map);
-            redisTemplate.expire(email,180,TimeUnit.SECONDS);
-//                redisTemplate.boundValueOps("email").set(verificationCode,180,TimeUnit.SECONDS);
+//                  redisTemplate.opsForHash().putAll("email",map);
+               redisTemplate.boundValueOps("email_"+email).set(verificationCode,180,TimeUnit.SECONDS);
                 // todo 发送的验证码拼接了之前的验证码？？ 获取content内容时候出现getContent现象
             // todo 2019年8月28日09:23:18 接口中屏蔽验证码
                 return ServerResponse.createBySuccess();
@@ -125,6 +124,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ServerResponse<String> forgetSendEmailCode(String email) {
+        //验证邮箱是否存在
+        int resultCount = userDao.checkEmail(email);
+        if(resultCount != 1){
+            return ServerResponse.createByErrorMsg("邮箱不存在！");
+        }
         //邮箱非空验证
         if(email==null||"".equals(email)){
             return ServerResponse.createByErrorMsg("邮箱不能为空,请填入有效地址");
@@ -132,15 +136,15 @@ public class UserServiceImpl implements UserService {
         //生成随机的验证码
         String verificationCode= SmsRandomCodeUtil.generateRandomSixNum();
         //调用邮箱发送
-        AliyunMailUtil.sendMail(email,"浙工商lab密码重置","您的验证码为："+verificationCode+"。"+"<br><br>"+"本邮件是系统自动发送的，请勿直接回复！");
+        AliyunMailUtil.sendMail(email,"浙工商lab密码重置","您的验证码为："+verificationCode+"。此验证码三分钟内有效，请及时重置密码。"+"<br><br>"+"本邮件是系统自动发送的，请勿直接回复！");
 //        SmsPojo smsPojo = new SmsPojo();
 //        smsPojo.setToAddress(email);
 //        smsPojo.setSubject("忘记密码");
 //        smsPojo.setContent("验证码为："+verificationCode);
 //        if(SmsUtil.sendTextMail(smsPojo)){
             //发送成功保存邮箱地址对应的验证码 todo 3分钟 已解决
-            redisTemplate.boundValueOps("forget_email").set(verificationCode,180,TimeUnit.SECONDS);
-            return ServerResponse.createBySuccess(verificationCode);
+            redisTemplate.boundValueOps("forget_"+email).set(verificationCode,180,TimeUnit.SECONDS);
+            return ServerResponse.createBySuccess();
 //        }else{
 //            return ServerResponse.createByErrorMsg("邮件发送失败");
 //        }
@@ -231,7 +235,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServerResponse<String> updatePassword(UserVo userVo) {
-        String checkCode = (String) redisTemplate.boundValueOps("forget_email").get();
+        String checkCode = (String) redisTemplate.boundValueOps("forget_"+userVo.getEmail()).get();
         if(!userVo.getCheckCode().equals(checkCode)){
             return ServerResponse.createByErrorMsg("验证码错误");
         }

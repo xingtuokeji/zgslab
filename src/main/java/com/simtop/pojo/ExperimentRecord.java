@@ -1,6 +1,5 @@
 package com.simtop.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simtop.controller.U3DReportToWeb;
 
 import java.util.Date;
@@ -9,7 +8,6 @@ import java.util.Date;
  * 实验记录表
  */
 public class ExperimentRecord {
-    @JsonIgnore
     //用于区分实验类型和组织形式
     private Integer params;
     //课程id
@@ -26,10 +24,6 @@ public class ExperimentRecord {
     private Date createTime;
     //最后一次更新时间
     private Date updateTime;
-    //时长
-    private Integer time;
-    //得分
-    private Double totalScore;
     //关联明细表
     private U3DExpRecord u3DExpRecord;
     //实验类型 集中实验/分散实验
@@ -146,22 +140,6 @@ public class ExperimentRecord {
         this.createTime = createTime;
     }
 
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-    public Double getTotalScore() {
-        return totalScore;
-    }
-
-    public void setTotalScore(Double totalScore) {
-        this.totalScore = totalScore;
-    }
-
     @Override
     public String toString() {
         return "ExperimentRecord{" +
@@ -173,8 +151,6 @@ public class ExperimentRecord {
                 ", experimentName='" + experimentName + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
-                ", time=" + time +
-                ", totalScore=" + totalScore +
                 ", u3DExpRecord=" + u3DExpRecord +
                 ", experimentType='" + experimentType + '\'' +
                 ", organization='" + organization + '\'' +

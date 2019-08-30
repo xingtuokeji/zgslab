@@ -14,10 +14,12 @@
         #{experimentName})
 
     </insert>
+    <!--分页显示课程列表页-->
     <select id="selectAll" resultType="com.simtop.pojo.Experiment">
         select id,experiment_code,username,experiment_name,course_name,
         experiment_start_time, experiment_end_time from tb_experiment
     </select>
+
     <delete id="deleteById" parameterType="int">
         delete from tb_experiment
         where id=#{id}
@@ -28,7 +30,7 @@
         experiment_start_time, experiment_end_time from tb_experiment
         <where>
             <if test="experimentCode!=null and experimentCode!=''">and experiment_code like concat(concat('%',#{experimentCode}),'%')</if>
-            <if test="courseName!=null and courseName!=''">and course_name like concat(concat('%',#{courseName}),'%')</if>
+<!--            <if test="courseName!=null and courseName!=''">and course_name like concat(concat('%',#{courseName}),'%')</if>-->
             <if test="username!=null and username!=''">and username like concat(concat('%',#{username}),'%')</if>
             <if test="experimentName!=null and experimentName!=''">and experiment_name like concat(concat('%',#{experimentName}),'%')</if>
         </where>
@@ -39,24 +41,32 @@
         where id=#{id}
     </select>
 
+    <!--实验课程管理可以修改的字段 课程名称、实验名称、课程开始时间、课程结束时间-->
     <update id="updateById" parameterType="com.simtop.pojo.Experiment">
         update tb_experiment
         <set>
             <if test="courseName!=null and courseName!=''">course_name=#{courseName},</if>
             <if test="experimentName!=null and experimentName!=''">experiment_name=#{experimentName},</if>
-            <if test="createTime!=null">create_time=#{createTime},</if>
             <if test="experimentStartTime!=null">experiment_start_time=#{experimentStartTime},</if>
+            <if test="experimentEndTime!=null">experiment_end_time=#{experimentEndTime},</if>
             update_time=now()
         </set>
         where id=#{id}
     </update>
 
+    <!--根据实验编码加入课程实验-->
     <select id="findByExperimentCode" parameterType="string" resultType="com.simtop.pojo.Experiment">
-        select id, course_id, course_name, experiment_type_id, create_time, update_time, user_id, username,
+        select id, course_name, create_time, update_time, username,
         experiment_code, experiment_start_time, experiment_end_time, experiment_name
         from tb_experiment
         where experiment_code=#{experimentCode}
     </select>
 
+    <!--根据课程id查询课程码-->
+    <select id="findExpCodeByExpId" parameterType="int" resultType="string">
+        select experiment_code
+        from tb_experiment
+        where id=#{id}
+    </select>
 </mapper>    
   

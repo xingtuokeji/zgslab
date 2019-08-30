@@ -37,6 +37,9 @@ public class U3DExpRecordController {
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> addExperimentRecordByExpId(@RequestBody U3DExpRecord expRecord, HttpServletRequest request){
+        /**
+         * 接口安全 验证
+         */
         logger.info("u3d正在往web数据库插入实验记录数据"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         logger.info("获取到的试验记录参数为："+expRecord);
         String token = request.getHeader("Authorization");

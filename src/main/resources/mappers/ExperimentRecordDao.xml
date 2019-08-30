@@ -12,6 +12,7 @@
         <result property="experimentCode" column="experiment_code"/>
         <result property="experimentType" column="experiment_type"/>
         <result property="organization" column="organization"/>
+        <result property="createTime" column="create_time"/>
         <association property="u3DExpRecord" column="id" javaType="com.simtop.pojo.U3DExpRecord">
             <id property="id" column="id"/>
             <result property="experimentId" column="experiment_id"/>
@@ -32,17 +33,20 @@
         </association>
     </resultMap>
 
+    <!--插入集中实验信息-->
     <insert id="insert" parameterType="com.simtop.pojo.ExperimentRecord" useGeneratedKeys="true" keyProperty="id">
         insert into tb_experiment_record (username, school, course_name, experiment_name, create_time, total_score,time,update_time,experiment_type,organization,experiment_code)
         values (#{username},#{school},#{courseName},#{experimentName},now(),NULL,NULL,now(),#{experimentType},#{organization},#{experimentCode})
     </insert>
 
+    <!--插入分散实验信息-->
     <insert id="insertDispersionExp" parameterType="com.simtop.pojo.ExperimentRecord" useGeneratedKeys="true" keyProperty="id">
         insert into tb_experiment_record(username, school, course_name,
         experiment_name, create_time, time, total_score, update_time, experiment_type, organization)
-        values (#{username},#{school},NULL,NULL,now(),NULL,NULL,now(),#{experimentType},#{organization})
+        values (#{username},#{school},#{courseName},#{experimentName},now(),NULL,NULL,now(),#{experimentType},#{organization})
     </insert>
 
+    <!--试验记录主表和明细表通过实验记录id关联-->
     <select id="selectAll" resultMap="result">
         select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
         from tb_experiment_record tr left join tb_u3d_web_exp_record twr
@@ -59,22 +63,23 @@
     </select>
 
     <select id="selectTotalExpTime" resultType="int">
-        select sum(time) from tb_experiment_record;
+        select sum(time) from tb_u3d_web_exp_record
     </select>
 
-    <!--显示已出报告列表-->
+    <!--显示已出报告列表 todo ????-->
     <select id="selectByExperimentId" resultMap="result1">
         select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name,tr.experiment_code, tr.create_time,tr.update_time
         from tb_experiment_record tr,tb_u3d_web_exp_result
         where tr.id=tb_u3d_web_exp_result.experiment_id
     </select>
 
-    <select id="selectByParams" parameterType="com.simtop.pojo.ExperimentRecord" resultType="com.simtop.pojo.ExperimentRecord">
-        select id, username, school, course_name, experiment_name, create_time, time, total_score, update_time, experiment_type, organization, experiment_code
-        from tb_experiment_record
+    <select id="selectByParams" parameterType="com.simtop.pojo.ExperimentRecord" resultMap="result">
+        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
+        from tb_experiment_record tr left join tb_u3d_web_exp_record twr
+        on tr.id=twr.experiment_id
         <where>
             <if test="username!=null and username!=''">and username like concat('%',concat(#{username},'%'))</if>
-            <if test="experimentName!=null and experimentName!=''">and experiment_name like concat('%',concat(#{experimetnName},'%'))</if>
+            <if test="experimentName!=null and experimentName!=''">and experiment_name like concat('%',concat(#{experimentName},'%'))</if>
             <if test="experimentCode!=null and experimentCode!=''">and experiment_code like concat('%',concat(#{experimentCode},'%'))</if>
         </where>
     </select>

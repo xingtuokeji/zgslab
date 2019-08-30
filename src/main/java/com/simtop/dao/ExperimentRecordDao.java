@@ -5,7 +5,6 @@ import com.simtop.pojo.ExperimentRecord;
 import java.util.List;
 
 public interface ExperimentRecordDao {
-    ExperimentRecord findById(Integer id);
 
     int insert(ExperimentRecord record);
 

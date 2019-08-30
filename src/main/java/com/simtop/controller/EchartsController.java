@@ -62,16 +62,17 @@ public class EchartsController {
     }
 
     /**
-     * 实验成绩分布图
+     * 用户实验成绩分布图
      * @param request
      * @return
      */
     @RequestMapping(value = "/score",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<Echarts3> selectScoreUser(HttpServletRequest request,HttpServletResponse response){
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
         String token = request.getHeader("Authorization");
+        if(token == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){

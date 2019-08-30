@@ -5,11 +5,19 @@ package com.simtop.pojo;
  */
 public class Echarts3 {
     //不同分数段人数
-    private Integer c1;//[90,100]
-    private Integer c2;//[80,90)
-    private Integer c3;//[70,80)
-    private Integer c4;//[60,70)
-    private Integer c5;//[0,60)
+    private Integer c0;//[90,100]
+    private Integer c1;//[80,90)
+    private Integer c2;//[70,80)
+    private Integer c3;//[60,70)
+    private Integer c4;//[0,60)
+
+    public Integer getC0() {
+        return c0;
+    }
+
+    public void setC0(Integer c0) {
+        this.c0 = c0;
+    }
 
     public Integer getC1() {
         return c1;
@@ -43,22 +51,14 @@ public class Echarts3 {
         this.c4 = c4;
     }
 
-    public Integer getC5() {
-        return c5;
-    }
-
-    public void setC5(Integer c5) {
-        this.c5 = c5;
-    }
-
     @Override
     public String toString() {
         return "Echarts3{" +
-                "c1=" + c1 +
+                "c0=" + c0 +
+                ", c1=" + c1 +
                 ", c2=" + c2 +
                 ", c3=" + c3 +
                 ", c4=" + c4 +
-                ", c5=" + c5 +
                 '}';
     }
 }

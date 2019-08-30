@@ -42,6 +42,9 @@ public class ExperimentController {
     @ResponseBody
     public ServerResponse<String> generateExpCode(HttpServletRequest request){
         String token = request.getHeader("Authorization");
+        if(token == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
@@ -69,7 +72,10 @@ public class ExperimentController {
 //        experiment.setExperimentName(experimentName);
 //        experiment.setCourseName(courseName);
 //        experiment.setUsername(username);
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader("Authorization");// 不传 会报出空指针一场
+        if(token == null){
+            return ServerResponse. createByErrorMsg("token无效");
+        }
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){

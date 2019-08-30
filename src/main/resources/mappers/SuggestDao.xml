@@ -3,9 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.simtop.dao.SuggestDao">
+    <!--本地评价-->
     <insert id="insert" parameterType="com.simtop.pojo.Suggest">
         insert into tb_evaluate_suggest(username, school, suggest, star, create_time, update_time,user_id)
         values (#{username},#{school},#{suggest},#{star},now(),now(),#{userId})
+    </insert>
+
+    <!--u3d评价-->
+    <insert id="insertU3d" parameterType="com.simtop.pojo.Suggest">
+        insert into tb_evaluate_suggest(username, school, suggest, star, create_time, update_time)
+        values (#{username},#{school},#{suggest},#{star},now(),now())
     </insert>
 
     <select id="selectAll" resultType="com.simtop.pojo.Suggest">

@@ -38,6 +38,7 @@ public class SuggestController {
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
+        // todo U3D >>
         //检查一下评星数据表中是否含有user_id,如果存在则返回提示信息
         if(suggestService.checkUserId(u.getId())==1){
             return ServerResponse.createByErrorMsg("用户已经评价，不可重复评价");

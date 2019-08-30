@@ -46,7 +46,11 @@ public class ExperimentRecordController {
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<Integer> add(HttpServletRequest request,@RequestBody ExperimentRecord record){
+        // System.out.println(record);
         String token = request.getHeader("Authorization");
+        if(token == null){
+            return ServerResponse.createByErrorMsg("token无效");
+        }
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){

@@ -94,8 +94,14 @@ public class ExperimentServiceImpl implements ExperimentService {
         return ServerResponse.createBySuccess(experiment);
     }
 
+    /**
+     * 更新实验课程信息
+     * @param experiment
+     * @return
+     */
     @Override
     public ServerResponse<String> updateById(Experiment experiment) {
+        //判断实验编码是否存在
         int resultCount = experimentDao.updateById(experiment);
         if(resultCount != 1){
             return ServerResponse.createByErrorMsg("修改实验课程信息失败");

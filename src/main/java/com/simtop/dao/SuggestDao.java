@@ -18,4 +18,6 @@ public interface SuggestDao {
     int checkUserId(Integer id);
 
     double countMark();
+
+    void insertU3d(Suggest suggest);
 }

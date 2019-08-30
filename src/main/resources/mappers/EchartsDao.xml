@@ -11,14 +11,16 @@
         ON tu.role_id=tr.id where tu.role_id!=1 and tu.role_id!=3 group by role_id order by value desc;
     </select>
 
+    <!--mysql >>> pojo 统计用户成绩-->
     <select id="selectScoreUser" resultType="com.simtop.pojo.Echarts3">
         select distinct
-        (select  count(test) FROM tb_user where test>=90) c1,
-        (select  count(test) FROM tb_user where test>=80 and test&lt;90) c2,
-        (select  count(test) FROM tb_user where test>=70 and test&lt;80) c3,
-        (select  count(test) FROM tb_user where test>=60 and test&lt;70) c4,
-        (select  count(test) FROM tb_user where test>=0 and test&lt;60) c5
-        from tb_user
+        (select  count(total_score) FROM tb_u3d_web_exp_record where total_score>=90) c0,
+        (select  count(total_score) FROM tb_u3d_web_exp_record where total_score>=80 and total_score&lt;90) c1,
+        (select  count(total_score) FROM tb_u3d_web_exp_record where total_score>=70 and total_score&lt;80) c2,
+        (select  count(total_score) FROM tb_u3d_web_exp_record where total_score>=60 and total_score&lt;70) c3,
+        (select  count(total_score) FROM tb_u3d_web_exp_record where total_score>=0 and total_score&lt;60) c4
+        from tb_u3d_web_exp_record;
+
     </select>
 
 </mapper>    

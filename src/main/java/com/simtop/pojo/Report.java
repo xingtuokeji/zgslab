@@ -30,6 +30,17 @@ public class Report {
     //用户评星
     private Integer star;
 
+    //用户评价
+    private String suggest;
+
+    public String getSuggest() {
+        return suggest;
+    }
+
+    public void setSuggest(String suggest) {
+        this.suggest = suggest;
+    }
+
     public Integer getStar() {
         return star;
     }
@@ -132,6 +143,7 @@ public class Report {
                 ", score=" + score +
                 ", conclusion='" + conclusion + '\'' +
                 ", star=" + star +
+                ", suggest='" + suggest + '\'' +
                 '}';
     }
 }
