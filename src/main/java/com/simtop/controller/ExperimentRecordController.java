@@ -91,6 +91,7 @@ public class ExperimentRecordController {
         }
         if(u.getRoleId()==3){
             //专家查看所有的记录
+            System.out.println("这是专家【实验记录】");
             List<ExperimentRecord> experimentRecordList = experimentRecordService.findAll();
             PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
             return  ServerResponse.createBySuccess(pageInfo);
@@ -176,13 +177,19 @@ public class ExperimentRecordController {
         }
         if(user.getRoleId()==2){
             // todo 教师 查看自己实验编码下的实验记录 2019年9月5日14:16:47
-            String username = user.getUsername();//教师姓名
-            // 获取所有的实验编码
-            List list = experimentDao.findExpCodeByUsername(username);
-            //查询该编码对应的所有实验记录
-            List<ExperimentRecord> experimentRecordList = experimentRecordService.findByExpList(list);
-            PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
-            return ServerResponse.createBySuccess(pageInfo);
+            if("".equals(record.getUsername())&&"".equals(record.getExperimentName())&&"".equals(record.getExperimentCode())){
+                String username = user.getUsername();//教师姓名
+                // 获取所有的实验编码
+                List list = experimentDao.findExpCodeByUsername(username);
+                //查询该编码对应的所有实验记录
+                List<ExperimentRecord> experimentRecordList = experimentRecordService.findByExpList(list);
+                PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }else{
+                List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
+                PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
         }
         return ServerResponse.createByErrorMsg("查询试验记录失败，请联系管理员");
     }

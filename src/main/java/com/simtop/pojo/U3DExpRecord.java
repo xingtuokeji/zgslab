@@ -4,51 +4,47 @@ package com.simtop.pojo;
 import java.util.Date;
 
 /**
- * U3D >>> Web 实验记录明细表
+ * U3D >>> Web 实验【记录明细表】
  */
 public class U3DExpRecord {
     //主键
     private Integer id;
-    //记录表id用于关联experiment表
     private Integer experimentId;//单次实验ID
-    //园区浏览得分
-    private Double parkBrowsing;
-    //库区浏览得分
-    private Double smartStorageBrowsing;
-    //设备认知得分
-    private Double deviceAwareness;
-    //订单处理得分
-    private Double orderProcessing;
-    //摘取式拣货得分
-    private Double pickByOrder;
-    //播种式拣货得分
-    private Double pickByBatchOrder;
-    //摘播式拣货得分
-    private Double pickByDisperse;
-    //发货作业得分
-    private Double shippingOperation;
-    //分拣作业得分
-    private Double sortingOperation;
-    //总得分
-    private Double totalScore; //试验记录明细表
-    //时间戳
-    //实验时长 2019年8月21日11:20:50
-    private Integer time;//试验记录明细表
-    private Date createTime;
-    private Date updateTime;
-    //todo 新增实验大类类型typeId
-    //实验类型1代表分散实验，2代表集中实验
-    private Integer experimentTypeId;
-    //用户id
-    private Integer userId;
+    private Integer userId;//用户id
+    private Integer park360Browsing;//园区浏览-360度浏览得分
+    private Integer parkTopBrowsing;//园区浏览-鸟瞰浏览得分
+    private Integer parkFirstPersonBrowsing;//园区浏览-自主漫游得分
+    private Integer parkAutoBrowsing;//园区浏览-自动漫游得分
+    private Integer storage360Browsing;//库区浏览-360度浏览得分
+    private Integer storageTopBrowsing;//库区浏览-鸟瞰浏览得分
+    private Integer deviceAwareness;//设备认知得分
+    private Integer orderProcessing;//订单处理得分
+    private Integer replenishment;//补货作业得分
+    private Integer pickByOrder;//摘取式拣货得分
+    private Integer pickByBatchOrder;//播种式拣货得分
+    private Integer pickByDisperse;//摘播式拣货得分
+    private Integer shippingSweepCode;//发货作业-扫码复核得分
+    private Integer shippingIntimidate;//发货作业-打贴面单得分
+    private Integer shippingSealing;//发货作业-包装封箱得分
+    private Integer sortingOperation;//分拣作业-全自动分拣作业得分
+    private Integer modeComparison;//决策分析-模式对比分析得分
+    private Integer ataComparison;//决策分析-数据对比分析得分
+    private Integer experimentalCorrect;//实验报告-实验修正得分
+    private Integer experimentalReport;//实验报告-完成实验报告得分
+    private Integer experimentalEvaluation;//实验评价得分
+    private Integer totalScore;//总分
+    private Integer time;//实验时长
+    private Date createTime;//创建时间
+    private Date updateTime;//更新时间
 
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
+    //由于返回值为int 报错
+//    public int getReplenishment() {
+//        return replenishment;
+//    }
+//
+//    public void setReplenishment(int replenishment) {
+//        this.replenishment = replenishment;
+//    }
 
     public Integer getId() {
         return id;
@@ -66,84 +62,196 @@ public class U3DExpRecord {
         this.experimentId = experimentId;
     }
 
-    public Double getParkBrowsing() {
-        return parkBrowsing;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setParkBrowsing(Double parkBrowsing) {
-        this.parkBrowsing = parkBrowsing;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public Double getSmartStorageBrowsing() {
-        return smartStorageBrowsing;
+    public Integer getPark360Browsing() {
+        return park360Browsing;
     }
 
-    public void setSmartStorageBrowsing(Double smartStorageBrowsing) {
-        this.smartStorageBrowsing = smartStorageBrowsing;
+    public void setPark360Browsing(Integer park360Browsing) {
+        this.park360Browsing = park360Browsing;
     }
 
-    public Double getDeviceAwareness() {
+    public Integer getParkTopBrowsing() {
+        return parkTopBrowsing;
+    }
+
+    public void setParkTopBrowsing(Integer parkTopBrowsing) {
+        this.parkTopBrowsing = parkTopBrowsing;
+    }
+
+    public Integer getParkFirstPersonBrowsing() {
+        return parkFirstPersonBrowsing;
+    }
+
+    public void setParkFirstPersonBrowsing(Integer parkFirstPersonBrowsing) {
+        this.parkFirstPersonBrowsing = parkFirstPersonBrowsing;
+    }
+
+    public Integer getParkAutoBrowsing() {
+        return parkAutoBrowsing;
+    }
+
+    public void setParkAutoBrowsing(Integer parkAutoBrowsing) {
+        this.parkAutoBrowsing = parkAutoBrowsing;
+    }
+
+    public Integer getStorage360Browsing() {
+        return storage360Browsing;
+    }
+
+    public void setStorage360Browsing(Integer storage360Browsing) {
+        this.storage360Browsing = storage360Browsing;
+    }
+
+    public Integer getStorageTopBrowsing() {
+        return storageTopBrowsing;
+    }
+
+    public void setStorageTopBrowsing(Integer storageTopBrowsing) {
+        this.storageTopBrowsing = storageTopBrowsing;
+    }
+
+    public Integer getDeviceAwareness() {
         return deviceAwareness;
     }
 
-    public void setDeviceAwareness(Double deviceAwareness) {
+    public void setDeviceAwareness(Integer deviceAwareness) {
         this.deviceAwareness = deviceAwareness;
     }
 
-    public Double getOrderProcessing() {
+    public Integer getOrderProcessing() {
         return orderProcessing;
     }
 
-    public void setOrderProcessing(Double orderProcessing) {
+    public void setOrderProcessing(Integer orderProcessing) {
         this.orderProcessing = orderProcessing;
     }
 
-    public Double getPickByOrder() {
+    public Integer getReplenishment() {
+        return replenishment;
+    }
+
+    public void setReplenishment(Integer replenishment) {
+        this.replenishment = replenishment;
+    }
+
+    public Integer getPickByOrder() {
         return pickByOrder;
     }
 
-    public void setPickByOrder(Double pickByOrder) {
+    public void setPickByOrder(Integer pickByOrder) {
         this.pickByOrder = pickByOrder;
     }
 
-    public Double getPickByBatchOrder() {
+    public Integer getPickByBatchOrder() {
         return pickByBatchOrder;
     }
 
-    public void setPickByBatchOrder(Double pickByBatchOrder) {
+    public void setPickByBatchOrder(Integer pickByBatchOrder) {
         this.pickByBatchOrder = pickByBatchOrder;
     }
 
-    public Double getPickByDisperse() {
+    public Integer getPickByDisperse() {
         return pickByDisperse;
     }
 
-    public void setPickByDisperse(Double pickByDisperse) {
+    public void setPickByDisperse(Integer pickByDisperse) {
         this.pickByDisperse = pickByDisperse;
     }
 
-    public Double getShippingOperation() {
-        return shippingOperation;
+    public Integer getShippingSweepCode() {
+        return shippingSweepCode;
     }
 
-    public void setShippingOperation(Double shippingOperation) {
-        this.shippingOperation = shippingOperation;
+    public void setShippingSweepCode(Integer shippingSweepCode) {
+        this.shippingSweepCode = shippingSweepCode;
     }
 
-    public Double getSortingOperation() {
+    public Integer getShippingIntimidate() {
+        return shippingIntimidate;
+    }
+
+    public void setShippingIntimidate(Integer shippingIntimidate) {
+        this.shippingIntimidate = shippingIntimidate;
+    }
+
+    public Integer getShippingSealing() {
+        return shippingSealing;
+    }
+
+    public void setShippingSealing(Integer shippingSealing) {
+        this.shippingSealing = shippingSealing;
+    }
+
+    public Integer getSortingOperation() {
         return sortingOperation;
     }
 
-    public void setSortingOperation(Double sortingOperation) {
+    public void setSortingOperation(Integer sortingOperation) {
         this.sortingOperation = sortingOperation;
     }
 
-    public Double getTotalScore() {
+    public Integer getModeComparison() {
+        return modeComparison;
+    }
+
+    public void setModeComparison(Integer modeComparison) {
+        this.modeComparison = modeComparison;
+    }
+
+    public Integer getAtaComparison() {
+        return ataComparison;
+    }
+
+    public void setAtaComparison(Integer ataComparison) {
+        this.ataComparison = ataComparison;
+    }
+
+    public Integer getExperimentalCorrect() {
+        return experimentalCorrect;
+    }
+
+    public void setExperimentalCorrect(Integer experimentalCorrect) {
+        this.experimentalCorrect = experimentalCorrect;
+    }
+
+    public Integer getExperimentalReport() {
+        return experimentalReport;
+    }
+
+    public void setExperimentalReport(Integer experimentalReport) {
+        this.experimentalReport = experimentalReport;
+    }
+
+    public Integer getExperimentalEvaluation() {
+        return experimentalEvaluation;
+    }
+
+    public void setExperimentalEvaluation(Integer experimentalEvaluation) {
+        this.experimentalEvaluation = experimentalEvaluation;
+    }
+
+    public Integer getTotalScore() {
         return totalScore;
     }
 
-    public void setTotalScore(Double totalScore) {
+    public void setTotalScore(Integer totalScore) {
         this.totalScore = totalScore;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
     }
 
     public Date getCreateTime() {
@@ -162,42 +270,37 @@ public class U3DExpRecord {
         this.updateTime = updateTime;
     }
 
-    public Integer getExperimentTypeId() {
-        return experimentTypeId;
-    }
-
-    public void setExperimentTypeId(Integer experimentTypeId) {
-        this.experimentTypeId = experimentTypeId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     @Override
     public String toString() {
         return "U3DExpRecord{" +
                 "id=" + id +
                 ", experimentId=" + experimentId +
-                ", parkBrowsing=" + parkBrowsing +
-                ", smartStorageBrowsing=" + smartStorageBrowsing +
+                ", userId=" + userId +
+                ", park360Browsing=" + park360Browsing +
+                ", parkTopBrowsing=" + parkTopBrowsing +
+                ", parkFirstPersonBrowsing=" + parkFirstPersonBrowsing +
+                ", parkAutoBrowsing=" + parkAutoBrowsing +
+                ", storage360Browsing=" + storage360Browsing +
+                ", storageTopBrowsing=" + storageTopBrowsing +
                 ", deviceAwareness=" + deviceAwareness +
                 ", orderProcessing=" + orderProcessing +
+                ", replenishment=" + replenishment +
                 ", pickByOrder=" + pickByOrder +
                 ", pickByBatchOrder=" + pickByBatchOrder +
                 ", pickByDisperse=" + pickByDisperse +
-                ", shippingOperation=" + shippingOperation +
+                ", shippingSweepCode=" + shippingSweepCode +
+                ", shippingIntimidate=" + shippingIntimidate +
+                ", shippingSealing=" + shippingSealing +
                 ", sortingOperation=" + sortingOperation +
+                ", modeComparison=" + modeComparison +
+                ", ataComparison=" + ataComparison +
+                ", experimentalCorrect=" + experimentalCorrect +
+                ", experimentalReport=" + experimentalReport +
+                ", experimentalEvaluation=" + experimentalEvaluation +
                 ", totalScore=" + totalScore +
                 ", time=" + time +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
-                ", experimentTypeId=" + experimentTypeId +
-                ", userId=" + userId +
                 '}';
     }
 }

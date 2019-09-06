@@ -4,17 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.simtop.dao.U3DExpRecordDao">
     <insert id="insertExpRecord" parameterType="com.simtop.pojo.U3DExpRecord">
-        insert into tb_u3d_web_exp_record(experiment_id, park_browsing, smart_storage_browsing,
-        device_awareness, order_processing, pick_by_order, pick_by_batch_order, pick_by_disperse,
-        shipping_operation, sorting_operation, total_score, create_time, update_time,user_id,time)
-        values (#{experimentId},#{parkBrowsing},#{smartStorageBrowsing},#{deviceAwareness},#{orderProcessing},#{pickByOrder},
-        #{pickByBatchOrder},#{pickByDisperse},#{shippingOperation},#{sortingOperation},#{totalScore},now(),now(),#{userId},#{time})
+        insert into tb_u3d_web_exp_record(experiment_id, user_id, park_360_browsing, park_top_browsing,
+        park_first_person_browsing, park_auto_browsing, storage_360_browsing, storage_top_browsing,
+        device_awareness, order_processing, replenishment, pick_by_order, pick_by_batch_order,
+        pick_by_disperse, shipping_sweep_code, shipping_intimidate, shipping_sealing, sorting_operation,
+        mode_comparison, ata_comparison, experimental_correct, experimental_report, experimental_evaluation,
+        total_score, time, create_time, update_time)
+        values (#{experimentId},#{userId},#{park360Browsing},#{parkTopBrowsing},#{parkFirstPersonBrowsing},#{parkAutoBrowsing},
+        #{storage360Browsing},#{storageTopBrowsing},#{deviceAwareness},#{orderProcessing},#{replenishment},#{pickByOrder},
+        #{pickByBatchOrder},#{pickByDisperse},#{shippingSweepCode},#{shippingIntimidate},#{shippingSealing},#{sortingOperation},
+        #{modeComparison},#{ataComparison},#{experimentalCorrect},#{experimentalReport},#{experimentalEvaluation},#{totalScore},#{time},now(),now())
     </insert>
 
     <select id="findById" parameterType="int" resultType="com.simtop.pojo.U3DExpRecord">
-        select id,experiment_id, park_browsing, smart_storage_browsing,
-        device_awareness, order_processing, pick_by_order, pick_by_batch_order, pick_by_disperse,
-        shipping_operation, sorting_operation, total_score, create_time, update_time,user_id
+        select id, experiment_id, user_id, park_360_browsing as park360Browsing, park_top_browsing,
+        park_first_person_browsing, park_auto_browsing, storage_360_browsing as storage360Browsing,
+        storage_top_browsing, device_awareness, order_processing, replenishment as replenishment, pick_by_order,
+        pick_by_batch_order, pick_by_disperse, shipping_sweep_code, shipping_intimidate, shipping_sealing,
+         sorting_operation, mode_comparison, ata_comparison, experimental_correct, experimental_report,
+         experimental_evaluation, total_score, time, create_time, update_time
         from tb_u3d_web_exp_record where experiment_id=#{experimentId}
     </select>
 

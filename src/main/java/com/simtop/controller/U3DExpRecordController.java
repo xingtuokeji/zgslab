@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * u3d实验记录推送至web端
+ * u3d实验记录 >> Web
  */
 @Controller
 @RequestMapping(value = "/u3d/experimentRecord")

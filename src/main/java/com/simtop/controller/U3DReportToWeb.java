@@ -102,14 +102,22 @@ public class U3DReportToWeb {
         }
         // todo 关联查询报告表和实验记录表显示已经出报告的数据
         if(u.getRoleId()==2){
-            // todo 教师 查看自己实验编码下的实验记录 2019年9月5日14:16:47
-            String username = u.getUsername();//教师姓名
-            // 获取所有的实验编码
-            List list = experimentDao.findExpCodeByUsername(username);
-            //查询该编码对应的所有实验记录
-            List<ExperimentRecord> experimentRecordList = experimentRecordService.selectByExperimentId(list);
-            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
-            return ServerResponse.createBySuccess(pageInfo);
+            // todo 教师 查看自己实验编码下的实验记录 2019年9月5日14:16:47  待解决多参数查询
+            if("".equals(record.getUsername())&&"".equals(record.getExperimentName())&&"".equals(record.getExperimentCode()) ){
+                //默认显示老师课程下面的已出报告数据
+                String username = u.getUsername();//教师姓名
+                // 获取所有的实验编码
+                List list = experimentDao.findExpCodeByUsername(username);
+                //查询该编码对应的所有实验记录
+                List<ExperimentRecord> experimentRecordList = experimentRecordService.selectByExperimentId(list);
+                PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }else{
+                //根据参数进行查询实验报告
+                List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
+                PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
         }
         if(u.getRoleId()==3){
             // todo 专家 只能查看所有已出报告列表(没有出成绩的不显示)

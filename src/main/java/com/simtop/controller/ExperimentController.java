@@ -54,7 +54,7 @@ public class ExperimentController {
     }
 
     /**
-     * 新增一条实验课程
+     * 新增一条实验课程(管理员、教师有权限新增)
      * @param experiment
      * @param request
      * @return
@@ -62,6 +62,10 @@ public class ExperimentController {
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> addExperiment(@RequestBody Experiment experiment, HttpServletRequest request){
+          Date experimentEndTime = experiment.getExperimentEndTime();
+          if(experimentEndTime.getTime()<new Date().getTime()){
+              return ServerResponse.createByErrorMsg("实验截止时间不能小于当前时间");
+          }
         // todo
 //        //解决body中文参数问题 实验名称、课程名称
 //        String experimentName = new String(request.getParameter("experimentName").getBytes("ISO-8859-1"),"UTF-8");
@@ -81,7 +85,11 @@ public class ExperimentController {
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-        return experimentService.add(experiment);
+        if(u.getRoleId()==1||u.getRoleId()==2){
+            // todo 只有教师、管理员可以新增实验课程
+            return experimentService.add(experiment);
+        }
+        return ServerResponse.createByErrorMsg("无权限新增实验课程,请联系管理员");
     }
 
     /**
