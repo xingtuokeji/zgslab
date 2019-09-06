@@ -11,7 +11,7 @@ public interface ExperimentDao {
 
     int insert(Experiment experiment);
 
-    List<Experiment> selectAll();
+    List<Experiment> selectAll(String username);
 
     int deleteById(Integer id);
 
@@ -24,4 +24,10 @@ public interface ExperimentDao {
     Experiment findByExperimentCode(String experimentCode);
 
     String findExpCodeByExpId(Integer id);
+
+    List<Experiment> findAll();
+
+    String selectExperimentNameByUserName(String username);
+
+    List<String> findExpCodeByUsername(String username);
 }

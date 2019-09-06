@@ -18,7 +18,15 @@ public interface ExperimentRecordDao {
 
     int insertDispersionExp(ExperimentRecord record);
 
-    List<ExperimentRecord> selectByExperimentId();
+    List<ExperimentRecord> selectByExperimentId(List list);
 
     List<ExperimentRecord> selectByParams(ExperimentRecord record);
+
+    List<ExperimentRecord> findByExperimentName(String experimentName);
+
+    List<ExperimentRecord> findByExpList(List list);
+
+    List<ExperimentRecord> selectByExperimentId1();
+
+    List<ExperimentRecord> findStuByUsername(String username);
 }

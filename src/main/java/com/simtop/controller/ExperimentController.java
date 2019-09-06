@@ -85,6 +85,7 @@ public class ExperimentController {
     }
 
     /**
+     * todo 实验记录默认显示需要前端修改接口url，其它不需要动 2019年9月5日11:30:04
      * 查询所有的实验课程信息 todo 分页 已解决
      * @param request
      * @return
@@ -101,10 +102,19 @@ public class ExperimentController {
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
         }
+        System.out.println("用户的角色id为："+u.getRoleId());
         PageHelper.startPage(pageNum,pageSize);
-        List<Experiment> experimentList = experimentService.findAll();
-        PageInfo<Experiment> pageInfo = new PageInfo<>(experimentList);
-        return ServerResponse.createBySuccess(pageInfo);
+        //获取登录后用户的username
+        /**
+         *
+         * 专家、学生查看和加入实验
+         */
+        if(u.getRoleId()==3 || u.getRoleId()==4 || u.getRoleId()==5 || u.getRoleId()==6){
+            List<Experiment> experimentList = experimentService.findAll();
+            PageInfo<Experiment> pageInfo = new PageInfo<>(experimentList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        return ServerResponse.createByErrorMsg("实验课程模块查询错误，请联系管理员");
     }
 
     /**
@@ -144,6 +154,32 @@ public class ExperimentController {
             pageNum = 1;
         }
         PageHelper.startPage(pageNum,pageSize);
+        if(u.getRoleId()==2) {
+            //todo 教师 查看自己的实验课程信息  + 多参数查询
+            if ("".equals(experiment.getExperimentName()) && "".equals(experiment.getUsername()) && "".equals(experiment.getExperimentCode())) {
+                System.out.println("查看教师自己新建的课程");
+                //默认显示
+                String username = u.getUsername();
+                List<Experiment> experimentList = experimentService.findAll(username);
+                PageInfo<Experiment> pageInfo = new PageInfo<>(experimentList);
+                return ServerResponse.createBySuccess(pageInfo);
+            } else {
+                System.out.println("进入到多参数查询");
+                //执行多参数查询功能
+                List<Experiment> experimentList = experimentService.findByParams(experiment);
+                PageInfo<Experiment> pageInfo = new PageInfo<>(experimentList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
+        }
+        //管理员
+        if(u.getRoleId()==1){
+            // todo 管理员 显示全部
+                //执行多参数查询功能
+                List<Experiment> experimentList = experimentService.findByParams(experiment);
+                PageInfo<Experiment> pageInfo = new PageInfo<>(experimentList);
+                return ServerResponse.createBySuccess(pageInfo);
+        }
+        //执行多参数查询功能
         List<Experiment> experimentList = experimentService.findByParams(experiment);
         PageInfo<Experiment> pageInfo = new PageInfo<>(experimentList);
         return ServerResponse.createBySuccess(pageInfo);

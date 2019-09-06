@@ -66,8 +66,8 @@ public class ExperimentServiceImpl implements ExperimentService {
     }
 
     @Override
-    public List<Experiment> findAll() {
-        List<Experiment> experimentList = experimentDao.selectAll();
+    public List<Experiment> findAll(String username) {
+        List<Experiment> experimentList = experimentDao.selectAll(username);
         return experimentList;
     }
 
@@ -113,5 +113,11 @@ public class ExperimentServiceImpl implements ExperimentService {
     public ServerResponse<Experiment> findByExperimentCode(String experimentCode) {
         Experiment experiment = experimentDao.findByExperimentCode(experimentCode);
         return ServerResponse.createBySuccess(experiment);
+    }
+
+    @Override
+    public List<Experiment> findAll() {
+        List<Experiment> experimentList = experimentDao.findAll();
+        return experimentList;
     }
 }

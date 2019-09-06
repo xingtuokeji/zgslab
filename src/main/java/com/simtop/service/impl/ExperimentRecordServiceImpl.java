@@ -108,8 +108,8 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
     }
 
     @Override
-    public List<ExperimentRecord> selectByExperimentId() {
-        List<ExperimentRecord> experimentRecords = experimentRecordDao.selectByExperimentId();
+    public List<ExperimentRecord> selectByExperimentId(List list) {
+        List<ExperimentRecord> experimentRecords = experimentRecordDao.selectByExperimentId(list);
         return experimentRecords;
     }
 
@@ -117,5 +117,27 @@ public class ExperimentRecordServiceImpl implements ExperimentRecordService {
     public List<ExperimentRecord> findByParams(ExperimentRecord record) {
         List<ExperimentRecord> experimentRecordList = experimentRecordDao.selectByParams(record);
         return experimentRecordList;
+    }
+
+    @Override
+    public List<ExperimentRecord> findAll(String experimentName) {
+        //根据老师开设的实验课程来查询
+        return experimentRecordDao.findByExperimentName(experimentName);
+    }
+
+    @Override
+    public List<ExperimentRecord> findByExpList(List list) {
+        return experimentRecordDao.findByExpList(list);
+    }
+
+    @Override
+    public List<ExperimentRecord> selectByExperimentId1() {
+        List<ExperimentRecord> experimentRecords = experimentRecordDao.selectByExperimentId1();
+        return experimentRecords;
+    }
+
+    @Override
+    public List<ExperimentRecord> findStuByUsername(String username) {
+        return experimentRecordDao.findStuByUsername(username);
     }
 }

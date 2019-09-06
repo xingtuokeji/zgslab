@@ -15,6 +15,7 @@
         values (#{username},#{school},#{suggest},#{star},now(),now())
     </insert>
 
+    <!--评价信息-->
     <select id="selectAll" resultType="com.simtop.pojo.Suggest">
         select id,username,school,suggest,star,create_time,update_time
         from tb_evaluate_suggest where star>=4 order by create_time desc
@@ -46,7 +47,7 @@
     </select>
 
     <select id="countMark" resultType="double">
-        select avg(star) from tb_report
+        select avg(star) from tb_evaluate_suggest
     </select>
 </mapper>    
   

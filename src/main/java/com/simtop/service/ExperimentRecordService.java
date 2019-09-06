@@ -18,7 +18,15 @@ public interface ExperimentRecordService {
 
     ServerResponse<Integer> countTotalExpTime();
 
-    List<ExperimentRecord> selectByExperimentId();
+    List<ExperimentRecord> selectByExperimentId(List list);
 
     List<ExperimentRecord> findByParams(ExperimentRecord record);
+
+    List<ExperimentRecord> findAll(String experimentName);
+
+    List<ExperimentRecord> findByExpList(List list);
+
+    List<ExperimentRecord> selectByExperimentId1();
+
+    List<ExperimentRecord> findStuByUsername(String username);
 }

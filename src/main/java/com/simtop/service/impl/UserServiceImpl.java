@@ -198,6 +198,10 @@ public class UserServiceImpl implements UserService {
         user.setSchool(userVo.getSchool());
         user.setProvince(userVo.getProvince());
         user.setCity(userVo.getCity());
+        //修改邮箱 todo 邮箱不能够唯一
+        if(userDao.checkEmail(userVo.getEmail())>0){
+            return ServerResponse.createByErrorMsg("该邮箱已存在！");
+        }
         user.setEmail(userVo.getEmail());
         user.setAddress(userVo.getAddress());
         user.setId(userVo.getId());

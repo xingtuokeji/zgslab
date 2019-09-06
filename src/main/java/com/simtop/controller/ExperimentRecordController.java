@@ -3,6 +3,7 @@ package com.simtop.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
+import com.simtop.dao.ExperimentDao;
 import com.simtop.dao.ExperimentRecordDao;
 import com.simtop.pojo.Experiment;
 import com.simtop.pojo.ExperimentRecord;
@@ -28,6 +29,9 @@ public class ExperimentRecordController {
 
     @Autowired
     private ExperimentRecordService experimentRecordService;
+
+    @Autowired
+    private ExperimentDao experimentDao;
 
     /**
      * 实验记录查询
@@ -61,6 +65,7 @@ public class ExperimentRecordController {
 
     /**
      * 分页查询所有的实验主表记录
+     *  todo 2019年9月5日11:44:52 前台调整接口路径url 其它不需要调整
      * @param request
      * @return
      */
@@ -77,9 +82,20 @@ public class ExperimentRecordController {
             pageNum = 1;
         }
         PageHelper.startPage(pageNum,pageSize);
-        List<ExperimentRecord> experimentRecordList = experimentRecordService.findAll();
-        PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
-        return  ServerResponse.createBySuccess(pageInfo);
+        if(u.getRoleId()==4 || u.getRoleId()==5 || u.getRoleId()==6){
+            //学生只能看到自己加入实验后的记录
+            String username = u.getUsername();
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.findStuByUsername(username);
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+            return  ServerResponse.createBySuccess(pageInfo);
+        }
+        if(u.getRoleId()==3){
+            //专家查看所有的记录
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.findAll();
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+            return  ServerResponse.createBySuccess(pageInfo);
+        }
+        return  ServerResponse.createByErrorMsg("查询实验记录失败,请联系管理员");
     }
 
     /**
@@ -148,12 +164,26 @@ public class ExperimentRecordController {
         if(user == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-        List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
         }
         PageHelper.startPage(pageNum,pageSize);
-        PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
-        return ServerResponse.createBySuccess(pageInfo);
+        if(user.getRoleId()==1){
+            //管理员查看、多参数查询所有的实验记录
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        if(user.getRoleId()==2){
+            // todo 教师 查看自己实验编码下的实验记录 2019年9月5日14:16:47
+            String username = user.getUsername();//教师姓名
+            // 获取所有的实验编码
+            List list = experimentDao.findExpCodeByUsername(username);
+            //查询该编码对应的所有实验记录
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.findByExpList(list);
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        return ServerResponse.createByErrorMsg("查询试验记录失败，请联系管理员");
     }
 }

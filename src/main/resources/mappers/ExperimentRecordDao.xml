@@ -21,18 +21,6 @@
         </association>
     </resultMap>
 
-    <resultMap id="result1" type="com.simtop.pojo.ExperimentRecord">
-        <id property="id" column="tr.id"/>
-        <result property="username" column="username"/>
-        <result property="school" column="school"/>
-        <result property="experimentName" column="experiment_name"/>
-        <result property="courseName" column="course_name"/>
-        <association property="u3DReportToWeb" column="id" javaType="com.simtop.pojo.ExperimentResult">
-            <id property="id" column="id"/>
-            <result property="experimentId" column="experiment_id"/>
-        </association>
-    </resultMap>
-
     <!--插入集中实验信息-->
     <insert id="insert" parameterType="com.simtop.pojo.ExperimentRecord" useGeneratedKeys="true" keyProperty="id">
         insert into tb_experiment_record (username, school, course_name, experiment_name, create_time, total_score,time,update_time,experiment_type,organization,experiment_code)
@@ -51,6 +39,7 @@
         select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
         from tb_experiment_record tr left join tb_u3d_web_exp_record twr
         on tr.id=twr.experiment_id
+        where twr.total_score is not null
     </select>
 
     <delete id="deleteById" parameterType="int">
@@ -67,10 +56,14 @@
     </select>
 
     <!--显示已出报告列表 todo ????-->
-    <select id="selectByExperimentId" resultMap="result1">
-        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name,tr.experiment_code, tr.create_time,tr.update_time
-        from tb_experiment_record tr,tb_u3d_web_exp_result
-        where tr.id=tb_u3d_web_exp_result.experiment_id
+    <select id="selectByExperimentId" resultMap="result" parameterType="list">
+       select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
+        from tb_experiment_record tr inner join tb_u3d_web_exp_record twr
+        on tr.id=twr.experiment_id
+        where tr.experiment_code in
+        <foreach collection="list" index="index" item="list" open="(" separator="," close=")">
+            #{list}
+        </foreach>
     </select>
 
     <select id="selectByParams" parameterType="com.simtop.pojo.ExperimentRecord" resultMap="result">
@@ -78,10 +71,42 @@
         from tb_experiment_record tr left join tb_u3d_web_exp_record twr
         on tr.id=twr.experiment_id
         <where>
+            twr.total_score is not null
             <if test="username!=null and username!=''">and username like concat('%',concat(#{username},'%'))</if>
             <if test="experimentName!=null and experimentName!=''">and experiment_name like concat('%',concat(#{experimentName},'%'))</if>
             <if test="experimentCode!=null and experimentCode!=''">and experiment_code like concat('%',concat(#{experimentCode},'%'))</if>
         </where>
+    </select>
+
+    <select id="findByExperimentName" parameterType="string" resultMap="result">
+        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
+        from tb_experiment_record tr left join tb_u3d_web_exp_record twr
+        on tr.id=twr.experiment_id
+        where experiment_name=#{experimentName}
+    </select>
+
+    <!--教师 课程编码对应的实验记录-->
+    <select id="findByExpList" resultMap="result" parameterType="java.util.List">
+        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
+        from tb_experiment_record tr left join tb_u3d_web_exp_record twr
+        on tr.id=twr.experiment_id
+        where tr.experiment_code in
+        <foreach collection="list" index="index" item="list" open="(" separator="," close=")">
+                #{list}
+        </foreach>
+    </select>
+
+    <select id="selectByExperimentId1" resultMap="result" parameterType="java.util.List">
+        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
+        from tb_experiment_record tr left join tb_u3d_web_exp_record twr
+        on tr.id=twr.experiment_id
+    </select>
+
+    <select id="findStuByUsername" parameterType="string" resultMap="result">
+        select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
+        from tb_experiment_record tr left join tb_u3d_web_exp_record twr
+        on tr.id=twr.experiment_id
+        where username=#{username}
     </select>
 
 </mapper>    

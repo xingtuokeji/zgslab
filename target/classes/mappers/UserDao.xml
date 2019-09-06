@@ -78,7 +78,8 @@
             <if test="email!=null and email!=''">email=#{email},</if>
             <if test="school!=null and school!=''">school=#{school},</if>
             <if test="province!=null and province!=''">province=#{province},</if>
-            <if test="city!=null and city!=''">city=#{city}</if>
+            <if test="city!=null and city!=''">city=#{city},</if>
+            <if test="roleId!=null and roleId!=''">role_id=#{roleId}</if>
         </set>
         where id=#{id}
     </update>

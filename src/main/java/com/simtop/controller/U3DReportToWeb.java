@@ -3,6 +3,7 @@ package com.simtop.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
+import com.simtop.dao.ExperimentDao;
 import com.simtop.interceptor.ExperimentResultService;
 import com.simtop.pojo.ExperimentRecord;
 import com.simtop.pojo.ExperimentResult;
@@ -22,6 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 实验报告模块
+ */
 @Controller
 @RequestMapping("/u3d/report")
 @CrossOrigin
@@ -34,6 +38,8 @@ public class U3DReportToWeb {
     @Autowired
     private ExperimentRecordService experimentRecordService;
 
+    @Autowired
+    private ExperimentDao experimentDao;
     /**
      * U3D<<<Web
      * @param result
@@ -76,16 +82,42 @@ public class U3DReportToWeb {
      */
     @RequestMapping(value = "/showReport",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<List<ExperimentRecord>> showReport(HttpServletRequest request){
+    public ServerResponse<PageInfo<ExperimentRecord>> showReport(ExperimentRecord record,HttpServletRequest request,Integer pageNum,Integer pageSize){
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
+        if(ObjectUtils.isEmpty(pageNum)){
+            pageNum = 1;
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        if(u.getRoleId()==1){
+            // todo 管理员能够查询所有的已出报告
+            // {todo} important 管理员不能够多参数查询 2019年9月6日09:34:34
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
         // todo 关联查询报告表和实验记录表显示已经出报告的数据
-        List<ExperimentRecord> experimentRecordList = experimentRecordService.selectByExperimentId();
-        return ServerResponse.createBySuccess(experimentRecordList);
+        if(u.getRoleId()==2){
+            // todo 教师 查看自己实验编码下的实验记录 2019年9月5日14:16:47
+            String username = u.getUsername();//教师姓名
+            // 获取所有的实验编码
+            List list = experimentDao.findExpCodeByUsername(username);
+            //查询该编码对应的所有实验记录
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.selectByExperimentId(list);
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        if(u.getRoleId()==3){
+            // todo 专家 只能查看所有已出报告列表(没有出成绩的不显示)
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.findAll();
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        return ServerResponse.createByErrorMsg("该用户不具备查询权限，请联系管理员开放");
     }
 
     /**
@@ -126,6 +158,7 @@ public class U3DReportToWeb {
 
     /**
      * 根据用户姓名、实验编码、实验名称查询试验记录
+     *  管理员专家
      */
     @RequestMapping(value = "/findByParams",method = RequestMethod.GET)
     @ResponseBody
@@ -139,11 +172,22 @@ public class U3DReportToWeb {
         if(user == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
-        List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
         if(ObjectUtils.isEmpty(pageNum)){
             pageNum = 1;
         }
         PageHelper.startPage(pageNum,pageSize);
+
+        if(user.getRoleId()==2){
+            // todo 教师 查看自己实验编码下的实验记录 2019年9月5日14:16:47
+            String username = user.getUsername();//教师姓名
+            // 获取所有的实验编码
+            List list = experimentDao.findExpCodeByUsername(username);
+            //查询该编码对应的所有实验记录
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.selectByExperimentId(list);
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        List<ExperimentRecord> experimentRecordList = experimentRecordService.findByParams(record);
         PageInfo<ExperimentRecord> pageInfo = new PageInfo<ExperimentRecord>(experimentRecordList);
         return ServerResponse.createBySuccess(pageInfo);
     }

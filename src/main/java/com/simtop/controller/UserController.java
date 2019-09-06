@@ -44,6 +44,7 @@ public class UserController {
         /**
          * 接受前台时候出现乱码问题 进行硬编码 todo 2019年8月19日17:38:20 中文参数乱码问题 important
          */
+        System.out.println("接收到的前台参数为："+userVo);
 //        String school = new String(request.getParameter("school").getBytes("ISO-8859-1"),"utf-8");
 //        String province = new String(request.getParameter("province").getBytes("ISO-8859-1"),"utf-8");
 //        String city = new String(request.getParameter("city").getBytes("ISO-8859-1"),"utf-8");
@@ -210,7 +211,7 @@ public class UserController {
         PageHelper.startPage(pageNum,pageSize);
         List<User> userList = userService.findByParams(params);
         PageInfo<User> pageInfo = new PageInfo<User>(userList);
-       return ServerResponse.createBySuccess(pageInfo);
+        return ServerResponse.createBySuccess(pageInfo);
     }
     /**
      * 统计功能：统计用户总数量
