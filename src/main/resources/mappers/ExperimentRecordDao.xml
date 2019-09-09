@@ -106,7 +106,7 @@
         select tr.id 'tr.id',tr.username, tr.school, tr.course_name, tr.experiment_name, tr.experiment_code, tr.create_time,twr.total_score,twr.time,tr.update_time
         from tb_experiment_record tr left join tb_u3d_web_exp_record twr
         on tr.id=twr.experiment_id
-        where username=#{username}
+        where tr.username=#{username} and twr.total_score is not null
     </select>
 
 </mapper>    

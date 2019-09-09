@@ -35,7 +35,11 @@ public class ReportServiceImpl implements ReportService {
         suggest.setSuggest(reportHeader.getSuggest());
         suggest.setStar(reportHeader.getStar());
         //todo 向tb_evaluate_suggest表中插入u3d评价评星数据
-        suggestDao.insertU3d(suggest);
+        int effectNum = suggestDao.insertU3d(suggest);
+        System.out.println("u3d向web评星表中插入的数据条数为："+effectNum);
+        if(effectNum != 1){
+            return ServerResponse.createByErrorMsg("插入评星数据失败！");
+        }
         int resultCount = reportDao.insertReportHeader(reportHeader);
         if(resultCount != 1){
             return ServerResponse.createByErrorMsg("插入数据失败");

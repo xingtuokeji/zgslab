@@ -19,7 +19,7 @@ public class ExperimentResult {
     private Integer zbsEffectiveTime;//摘播式有效时长
     private Integer zbsTotalPickTime;//摘播式总时长
     private double zbsEfficiency;//摘播式效率
-    private Integer zbsWalkStep;//摘播式行走步数\
+    private Integer zbsWalkStep;//摘播式行走步数
 
     private Integer zqsEffectiveTime;//摘取式有效时长
     private Integer zqsTotalPickTime;//摘取式总时长
@@ -42,20 +42,6 @@ public class ExperimentResult {
     private int goodsItem;
     //货物总量
     private int goodsTotalNum;
-    //用户总结
-    private String userSummary;
-    //用户评价
-    private String userComment;
-    //实验评星
-    private int star;
-
-    public int getStar() {
-        return star;
-    }
-
-    public void setStar(int star) {
-        this.star = star;
-    }
 
     public Integer getId() {
         return id;
@@ -233,22 +219,6 @@ public class ExperimentResult {
         this.goodsTotalNum = goodsTotalNum;
     }
 
-    public String getUserSummary() {
-        return userSummary;
-    }
-
-    public void setUserSummary(String userSummary) {
-        this.userSummary = userSummary;
-    }
-
-    public String getUserComment() {
-        return userComment;
-    }
-
-    public void setUserComment(String userComment) {
-        this.userComment = userComment;
-    }
-
     @Override
     public String toString() {
         return "ExperimentResult{" +
@@ -274,9 +244,6 @@ public class ExperimentResult {
                 ", orderNum=" + orderNum +
                 ", goodsItem=" + goodsItem +
                 ", goodsTotalNum=" + goodsTotalNum +
-                ", userSummary='" + userSummary + '\'' +
-                ", userComment='" + userComment + '\'' +
-                ", star=" + star +
                 '}';
     }
 }

@@ -7,15 +7,16 @@
         insert into tb_u3d_web_exp_result(user_id, experiment_id, worker, experiment_times, zbs_effective_time, zbs_total_pick_time,
         zbs_efficiency, zbs_walk_step, zqs_effective_time, zqs_total_pick_time, zqs_efficiency, zqs_walk_step,
         bzs_effective_time, bzs_total_pick_time, bzs_efficiency, bzs_walk_step, order_num, goods_item,
-        goods_total_num, user_summary, user_comment, create_time, update_time,star)
+        goods_total_num,create_time, update_time)
         values (#{userId},#{experimentId},#{worker},#{experimentTimes},#{zbsEffectiveTime},#{zbsTotalPickTime},#{zbsEfficiency},
         #{zbsWalkStep},#{zqsEffectiveTime},#{zqsTotalPickTime},#{zqsEfficiency},#{zqsWalkStep},#{bzsEffectiveTime},#{bzsTotalPickTime},
-        #{bzsEfficiency},#{bzsWalkStep},#{orderNum},#{goodsItem},#{goodsTotalNum},#{userSummary},#{userComment},now(),now(),#{star})
+        #{bzsEfficiency},#{bzsWalkStep},#{orderNum},#{goodsItem},#{goodsTotalNum},now(),now())
     </insert>
 
     <select id="findByExperimentTimes" parameterType="com.simtop.pojo.ExperimentResult" resultType="com.simtop.pojo.ExperimentResult">
-        select id, user_id, experiment_id, worker, experiment_times, zbs_effective_time, zbs_total_pick_time, zbs_efficiency, zbs_walk_step, zqs_effective_time, zqs_total_pick_time, zqs_efficiency, zqs_walk_step, bzs_effective_time, bzs_total_pick_time, bzs_efficiency, bzs_walk_step, order_num, goods_item, goods_total_num,
-        user_summary, user_comment, star, create_time, update_time
+        select id, user_id, experiment_id, worker, experiment_times, zbs_effective_time, zbs_total_pick_time, zbs_efficiency, zbs_walk_step,
+        zqs_effective_time, zqs_total_pick_time, zqs_efficiency, zqs_walk_step, bzs_effective_time, bzs_total_pick_time, bzs_efficiency,
+        bzs_walk_step, order_num, goods_item, goods_total_num,create_time, update_time
         from tb_u3d_web_exp_result
         where experiment_id=#{experimentId} and experiment_times=#{experimentTimes}
     </select>

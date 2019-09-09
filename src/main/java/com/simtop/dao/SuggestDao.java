@@ -19,5 +19,5 @@ public interface SuggestDao {
 
     double countMark();
 
-    void insertU3d(Suggest suggest);
+    int insertU3d(Suggest suggest);
 }

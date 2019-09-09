@@ -50,7 +50,11 @@ public class U3DReportToWeb {
     @ResponseBody
     public ServerResponse<String> addReportData(@RequestBody ExperimentResult result, HttpServletRequest request){
         logger.info("u3d正在往web数据库插入报告数据"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        System.out.println("获取道的报告参数为："+result);
+        System.out.println("获取的的报告数据为："+result);
+        result.setBzsEfficiency(Double.parseDouble(String.format("%.2f",result.getBzsEfficiency())));
+        result.setZbsEfficiency(Double.parseDouble(String.format("%.2f",result.getZbsEfficiency())));
+        result.setZqsEfficiency(Double.parseDouble(String.format("%.2f",result.getZqsEfficiency())));
+        System.out.println("处理后获取的报告数据为："+result);
         String token = request.getHeader("Authorization");
         String jwt = token.substring(token.lastIndexOf(" ")+1);
         User u = JwtUtil.unsign(jwt,User.class);
@@ -122,6 +126,12 @@ public class U3DReportToWeb {
         if(u.getRoleId()==3){
             // todo 专家 只能查看所有已出报告列表(没有出成绩的不显示)
             List<ExperimentRecord> experimentRecordList = experimentRecordService.findAll();
+            PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
+            return ServerResponse.createBySuccess(pageInfo);
+        }
+        if(u.getRoleId()==4){
+            // todo 学生 只能看到自己的实验报告
+            List<ExperimentRecord> experimentRecordList = experimentRecordService.findStuByUsername(u.getUsername());
             PageInfo<ExperimentRecord> pageInfo = new PageInfo<>(experimentRecordList);
             return ServerResponse.createBySuccess(pageInfo);
         }

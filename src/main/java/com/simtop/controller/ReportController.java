@@ -38,6 +38,12 @@ public class ReportController {
         return reportService.selectByReportHeader(experimentId);
     }
 
+    /**
+     * u3d推送报告头部基本信息
+     * @param request
+     * @param reportHeader
+     * @return
+     */
     @RequestMapping(value = "/reportHeader/add",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> u3DAddReportHeader(HttpServletRequest request,@RequestBody Report reportHeader){

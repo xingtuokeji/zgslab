@@ -20,10 +20,13 @@ public class ExperimentResultServiceImpl implements ExperimentResultService {
 
     @Override
     public ServerResponse<String> add(ExperimentResult result) {
+        System.out.println("开始往web插入报告数据");
         int resultCount = experimentResultDao.insert(result);
-        if(resultCount != 1){
+        //向web插入18条实验报告数据
+        if(resultCount == 0){
             return ServerResponse.createByErrorMsg("向web端插入数据错误");
         }
+        System.out.println("插入报告数据成功");
         return ServerResponse.createBySuccessMsg("向web端插入数据成功");
     }
 
