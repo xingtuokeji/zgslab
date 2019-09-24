@@ -1,5 +1,7 @@
 package com.simtop.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.simtop.common.Key;
 import com.simtop.common.ServerResponse;
 import com.simtop.pojo.U3DExpRecord;
 import com.simtop.pojo.User;
@@ -48,6 +50,7 @@ public class U3DExpRecordController {
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
         }
+        expRecord.setLoginName(u.getLoginName());
          return u3DExpRecordService.add(expRecord);
     }
 

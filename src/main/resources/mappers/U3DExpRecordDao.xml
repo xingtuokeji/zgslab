@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.simtop.dao.U3DExpRecordDao">
-    <insert id="insertExpRecord" parameterType="com.simtop.pojo.U3DExpRecord">
+    <insert id="insertExpRecord" parameterType="com.simtop.pojo.U3DExpRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into tb_u3d_web_exp_record(experiment_id, user_id, park_360_browsing, park_top_browsing,
         park_first_person_browsing, park_auto_browsing, storage_360_browsing, storage_top_browsing,
         device_awareness, order_processing, replenishment, pick_by_order, pick_by_batch_order,

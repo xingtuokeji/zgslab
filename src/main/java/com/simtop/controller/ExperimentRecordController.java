@@ -1,7 +1,9 @@
 package com.simtop.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.simtop.common.Key;
 import com.simtop.common.ServerResponse;
 import com.simtop.dao.ExperimentDao;
 import com.simtop.dao.ExperimentRecordDao;
@@ -9,7 +11,9 @@ import com.simtop.pojo.Experiment;
 import com.simtop.pojo.ExperimentRecord;
 import com.simtop.pojo.User;
 import com.simtop.service.ExperimentRecordService;
+import com.simtop.util.HttpUtil;
 import com.simtop.util.JwtUtil;
+import com.simtop.util.TestJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
@@ -59,6 +63,31 @@ public class ExperimentRecordController {
         User u = JwtUtil.unsign(jwt,User.class);
         if(u == null){
             return ServerResponse.createByErrorMsg("token无效");
+        }
+        // todo 推送实验状态给ilab平台
+        String username = u.getLoginName();
+//        String json = "{\"username\":"+username+",\"issuerId\":100400}";
+        JSONObject param=new JSONObject();
+        param.put("username",username);
+        param.put("issuerId", Key.issuerId);
+        String json=param.toString();
+        System.out.println(json);
+        try {
+            String xjwt = TestJWT.encrty(json);
+            System.out.println(xjwt);
+
+            /**
+             * 测试平台的url
+             */
+            HttpUtil.loadJSON("http://202.205.145.156:8017/third/api/test/result/upload?xjwt="+xjwt);
+
+            /**
+             * 正式平台url
+             */
+//            HttpUtil.loadJSON("http://www.ilab-x.com/third/api/test/result/upload?xjwt="+xjwt);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return experimentRecordService.add(record);
     }

@@ -2,6 +2,7 @@ package com.simtop.dao;
 
 import com.simtop.pojo.ExperimentRecord;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ExperimentRecordDao {
@@ -29,4 +30,6 @@ public interface ExperimentRecordDao {
     List<ExperimentRecord> selectByExperimentId1();
 
     List<ExperimentRecord> findStuByUsername(String username);
+
+    Date findCreateTimeByExperimentId(Integer experimentId);
 }

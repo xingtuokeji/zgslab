@@ -21,7 +21,7 @@ public class ExperimentRecord {
     //实验名称
     private String experimentName;
     //创建时间
-    private Date createTime;
+    private Date createTime;//实验开始时间
     //最后一次更新时间
     private Date updateTime;
     //关联明细表

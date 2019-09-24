@@ -5,6 +5,7 @@ import java.util.Date;
 
 /**
  * U3D >>> Web 实验【记录明细表】
+ * todo 对接ilab平台
  */
 public class U3DExpRecord {
     //主键
@@ -34,9 +35,17 @@ public class U3DExpRecord {
     private Integer experimentalEvaluation;//实验评价得分
     private Integer totalScore;//总分
     private Integer time;//实验时长
-    private Date createTime;//创建时间
+    private Date createTime;//创建时间 实验结束时间
     private Date updateTime;//更新时间
+    private String loginName;//登录名
 
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
     //由于返回值为int 报错
 //    public int getReplenishment() {
 //        return replenishment;
@@ -301,6 +310,7 @@ public class U3DExpRecord {
                 ", time=" + time +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
+                ", loginName='" + loginName + '\'' +
                 '}';
     }
 }

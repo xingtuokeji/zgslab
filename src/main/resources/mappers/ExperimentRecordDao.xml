@@ -109,5 +109,10 @@
         where tr.username=#{username} and twr.total_score is not null
     </select>
 
+    <select id="findCreateTimeByExperimentId" parameterType="int" resultType="date">
+        select create_time
+        from tb_experiment_record where id=#{experimentId}
+    </select>
+
 </mapper>    
   
