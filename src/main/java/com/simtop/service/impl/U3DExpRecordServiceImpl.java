@@ -48,11 +48,11 @@ public class U3DExpRecordServiceImpl implements U3DExpRecordService {
         // 实验得分
         int score = record.getTotalScore();
         //实验结束时间
-        long startDate = record.getCreateTime().getTime();
+        long endDate = record.getCreateTime().getTime();
         //实验开始时间
         //根据实验记录id查询试验记录主表
         Date createTime = experimentRecordDao.findCreateTimeByExperimentId(expRecord.getExperimentId());
-        long endDate = createTime.getTime();
+        long startDate = createTime.getTime();
         //实验用时
         int timeUsed = record.getTime()/60;
         //接入平台编号：由“实验空间”分配给实验教学项目的编号
@@ -91,12 +91,13 @@ public class U3DExpRecordServiceImpl implements U3DExpRecordService {
             /**
              * 测试平台实验结果数据上传ilab url
              */
-             HttpUtil.loadJSON("http://202.205.145.156:8017/project/log/upload?xjwt="+jwt);
+             // HttpUtil.loadJSON("http://202.205.145.156:8017/project/log/upload?xjwt="+jwt);
 
             /**
              * 正式平台实验结果数据上传ilab url
              */
-//            HttpUtil.loadJSON("http://www.ilab-x.com/project/log/upload?xjwt="+jwt);
+            String code = HttpUtil.loadJSON("http://www.ilab-x.com/project/log/upload?xjwt="+jwt);
+            System.out.println("调用实验结果接口的返回码=================="+code);
         } catch (Exception e) {
             e.printStackTrace();
         }

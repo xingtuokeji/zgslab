@@ -79,12 +79,13 @@ public class ExperimentRecordController {
             /**
              * 测试平台的url
              */
-            HttpUtil.loadJSON("http://202.205.145.156:8017/third/api/test/result/upload?xjwt="+xjwt);
+            // HttpUtil.loadJSON("http://202.205.145.156:8017/third/api/test/result/upload?xjwt="+xjwt);
 
             /**
              * 正式平台url
              */
-//            HttpUtil.loadJSON("http://www.ilab-x.com/third/api/test/result/upload?xjwt="+xjwt);
+            String code = HttpUtil.loadJSON("http://www.ilab-x.com/third/api/test/result/upload?xjwt="+xjwt);
+            System.out.println("推送实验状态的状态码为==========="+code);
 
         } catch (Exception e) {
             e.printStackTrace();

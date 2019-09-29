@@ -15,9 +15,9 @@ public class TestJWT {
         {
             String data= "";
 //            // =================示例：解密xjwt (token也是一个xjwt);
-//            String xjwt = "AAABbV0hHTUBAAAAAAABiDA%3D.%2BWWnm2RsBmYtina4eUwxloBb57MzBrNtG%2Fq3hUgw7DxBkGT45PL2m%2FKU7rSBu9odGGbTaLMF16NiHFBl35xV2nO8h%2Be57Ykd6dcc8anRTnDDBidW5lRAho4ZiIwcxyTKD2xbF7wDiJ%2FIV5Lz15usLBelaqn%2FsC8vZ%2BckqIeY6JZZN26HOatD1dyRE6m5koKuY5EQ9c4FeIIsYH9v%2Fubp%2BykNaDlEGRZMr9omYBrN3dC0YXVPQwDDaCEiwIaDHiYZ08g8jgEWuTnhf38DQL8njlFbYBkb8MvDvLuXcrbbC%2BU%3D.7tnw6ojpQ5OTz2zsV4no%2FdioKFWjL4NyMuJmnPL4UeU%3D";
-//            data = dencrty(xjwt);
-//            System.out.println(data);
+             String xjwt = "AAABbWITm98BAAAAAAABkFI%3D.F3uwmNO5DvjdknnsqCv6S0jNxDq2VcBzJWd9Kt%2BAigaLuxT5XV%2FOE1%2BkSWTNQ45bx%2B4On1pAg3V8vgPa125uaZckvDGhSmkMJ0Gycudkpiz0Qaf1ZgnogQt8i2WjBi%2BGgZiB1YcJpSbfLuEfeMtB48%2Buk9FF50IJENZDBqgJBh%2Fwhk5NMZ7%2FRFnGTrjw3tPP%2FOF7wihNxcCb4b8TqOVA%2BR17bzwUTQix6R5JSaJV8wGaz6ZwHbZChzVnUcOprJ48Ph52MSpk7Ik%2F02V5333yYO0CesihETlN%2FMsonp3ZVsnHd3Y8DRlcV1j9MTzb5mpC0SgS9L4xazf9fUweixjzSA%3D%3D.zGF5hJD5%2FeJnGEZsh9%2FGSG98SjgDAfR0EEkJA6f3C7c%3D";
+            data = dencrty(xjwt);
+           System.out.println(data);
 
             // =================示例：生成xjwt
             JSONObject param=new JSONObject();

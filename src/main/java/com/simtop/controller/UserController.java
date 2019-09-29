@@ -61,7 +61,7 @@ public class UserController {
     }
 
     /**
-     * 注册时 1、获取后台生成的验证码
+     * 注册时 1、获取后台生成的邮箱验证码
      * 参数需要安全，接口安全
      * @return
      */
@@ -73,7 +73,7 @@ public class UserController {
     }
     /**
      * 用户登录 成功后给前台返回一个token,后面需要拿这个token去验证
-     *
+     * todo 用户类型：ilab用户 2019年9月24日15:34:07
      * 前台传入
      * @param userVo
      * @return
@@ -81,20 +81,32 @@ public class UserController {
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> login(@RequestBody UserVo userVo){
+        // todo 如果是管理员或者评审专家 直接登陆 admin 123
+        if(userVo.getRoleId()==1||userVo.getRoleId()==3){
+            User user = new User();
+            //角色id
+            user.setRoleId(userVo.getRoleId());
+            //登录名
+            user.setLoginName(userVo.getLoginName());
+            //登陆密码
+            user.setPassword(userVo.getPassword());
+            return jwtLoginService.login(user);
+        }
+
+
         //验证登陆接口 todo 满足ilab用户验证要求 loginName password nonce cnonce 已解决 2019年9月23日13:11:39
         String nonce = StringUtil.getRandomString(16);
         String cnonce = StringUtil.getRandomString(16);
         String newPassword = SHA256Util.generateShaPwd(nonce,userVo.getPassword(),cnonce);
-
         /**
          * 测试平台url
          */
-        String json = HttpUtil.loadJSON("http://202.205.145.156:8017/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
+        //String json = HttpUtil.loadJSON("http://202.205.145.156:8017/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
 
         /**
          * 正式平台的url ！！！
          */
-        // String json = HttpUtil.loadJSON("http://www.ilab-x.com/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
+        String json = HttpUtil.loadJSON("http://www.ilab-x.com/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
         JSONObject object = JSONObject.parseObject(json);
         int code = object.getInteger("code");
         // code==0 代表验证成功
