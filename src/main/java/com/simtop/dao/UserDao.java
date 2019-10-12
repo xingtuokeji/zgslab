@@ -30,4 +30,8 @@ public interface UserDao {
     int selectUserCounts();
 
     User findById(Integer id);
+
+    User findByLoginName(String loginName);
+
+    int inserIlabUser(User user);
 }

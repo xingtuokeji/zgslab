@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simtop.common.ServerResponse;
+import com.simtop.dao.CountDao;
+import com.simtop.pojo.IlabUser;
 import com.simtop.pojo.User;
 import com.simtop.service.JwtLoginService;
 import com.simtop.service.UserService;
-import com.simtop.util.HttpUtil;
-import com.simtop.util.JwtUtil;
-import com.simtop.util.SHA256Util;
-import com.simtop.util.StringUtil;
+import com.simtop.util.*;
 import com.simtop.vo.UserParamsVo;
 import com.simtop.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,9 @@ public class UserController {
 
     @Autowired
     private JwtLoginService jwtLoginService;
+
+    @Autowired
+    private CountDao countDao;
 
     /**
      * 前台用户注册接口
@@ -71,6 +73,65 @@ public class UserController {
         //根据邮箱获取验证码
         return userService.generateCheckCode(email);
     }
+
+    /**
+     * ilab平台用户登陆 2019年10月11日15:50:32
+     */
+    @RequestMapping(value = "/ilab/login",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> login(@RequestBody IlabUser ilabUser,HttpServletRequest request){
+        try {
+            request.setCharacterEncoding("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("获取到的ilab参数token为："+ilabUser.getToken());
+        //获取ilab传递过来的token
+        String token = ilabUser.getToken();// ilab传递过来的token
+        try {
+            // 解析token获取包含username的json字符串
+            String ilabJson = TestJWT.dencrty(token);// todo !!乱码了！ *******************
+            System.out.println(ilabJson);
+            // todo ilabJson乱码了！ 2019年10月12日09:39:58
+            JSONObject o = JSONObject.parseObject(ilabJson);
+            String loginName = o.getString("un");
+            String username  = loginName;
+            //如果数据库存在登陆用户名 则直接返回
+            User user =  userService.selectUserByLoginName(loginName);
+            if(user != null){
+                String token1 = JwtUtil.sign(user,600L*1000L*60L);//token有效期10小时
+                /**
+                 * todo 统计网站访问次数：登陆成功后统计次数变量count加1
+                 */
+                int num = countDao.selectCount();
+                int count = ++num;
+                countDao.updateOne(count);
+                return ServerResponse.createBySuccess(token1);
+            }
+            //不存在则在用户数据表中创建用户数据
+            UserVo userVo = new UserVo();
+            userVo.setLoginName(loginName);
+            userVo.setUsername(username);
+            userVo.setSchool("ilab平台用户");
+            userVo.setProvince("ilab平台");
+            userVo.setCity("ilab平台");
+            userVo.setRoleId(4);//学生
+            userVo.setPassword("12345");
+            userVo.setEmail("ilab@163.com");
+            int resultCount = userService.insertIlabUser(userVo);
+            //插入用户数据 给前端返回user的jwt对象
+            User u =  userService.selectUserByLoginName(userVo.getLoginName());
+            String token1 = JwtUtil.sign(u,600L*1000L*60L);//token1有效期10小时
+            int num = countDao.selectCount();
+            int count = ++num;
+            countDao.updateOne(count);
+            return ServerResponse.createBySuccess(token1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ServerResponse.createByErrorMsg("新增ilab平台用户失败");
+    }
+
     /**
      * 用户登录 成功后给前台返回一个token,后面需要拿这个token去验证
      * todo 用户类型：ilab用户 2019年9月24日15:34:07
@@ -94,26 +155,26 @@ public class UserController {
         }
 
 
-        //验证登陆接口 todo 满足ilab用户验证要求 loginName password nonce cnonce 已解决 2019年9月23日13:11:39
-        String nonce = StringUtil.getRandomString(16);
-        String cnonce = StringUtil.getRandomString(16);
-        String newPassword = SHA256Util.generateShaPwd(nonce,userVo.getPassword(),cnonce);
-        /**
-         * 测试平台url
-         */
-        //String json = HttpUtil.loadJSON("http://202.205.145.156:8017/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
-
-        /**
-         * 正式平台的url ！！！
-         */
-        String json = HttpUtil.loadJSON("http://www.ilab-x.com/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
-        JSONObject object = JSONObject.parseObject(json);
-        int code = object.getInteger("code");
-        // code==0 代表验证成功
-        if(code != 0){
-            //验证不成功 返回错误信息
-            return ServerResponse.createByErrorMsg("请使用ilab平台注册账户！");
-        }
+//        //验证登陆接口 todo 满足ilab用户验证要求 loginName password nonce cnonce 已解决 2019年9月23日13:11:39
+//        String nonce = StringUtil.getRandomString(16);
+//        String cnonce = StringUtil.getRandomString(16);
+//        String newPassword = SHA256Util.generateShaPwd(nonce,userVo.getPassword(),cnonce);
+//        /**
+//         * 测试平台url
+//         */
+//        //String json = HttpUtil.loadJSON("http://202.205.145.156:8017/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
+//
+//        /**
+//         * 正式平台的url ！！！
+//         */
+//        String json = HttpUtil.loadJSON("http://www.ilab-x.com/sys/api/user/validate?username="+userVo.getLoginName()+"&password="+newPassword+"&nonce="+nonce+"&cnonce="+cnonce);
+//        JSONObject object = JSONObject.parseObject(json);
+//        int code = object.getInteger("code");
+//        // code==0 代表验证成功
+//        if(code != 0){
+//            //验证不成功 返回错误信息
+//            return ServerResponse.createByErrorMsg("请使用ilab平台注册账户！");
+//        }
         User user = new User();
         //角色id
         user.setRoleId(userVo.getRoleId());

@@ -238,6 +238,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User selectUserByLoginName(String loginName) {
+        return userDao.findByLoginName(loginName);
+    }
+
+    @Override
+    public int insertIlabUser(UserVo userVo) {
+        User user = new User();
+        user.setUsername(userVo.getUsername());
+        user.setLoginName(userVo.getLoginName());
+        user.setSchool(userVo.getSchool());
+        user.setProvince(userVo.getProvince());
+        user.setCity(userVo.getCity());
+        user.setRoleId(userVo.getRoleId());
+        user.setPassword(userVo.getPassword());
+        user.setEmail(userVo.getEmail());
+        return userDao.inserIlabUser(user);
+    }
+
+    @Override
     public ServerResponse<String> updatePassword(UserVo userVo) {
         String checkCode = (String) redisTemplate.boundValueOps("forget_"+userVo.getEmail()).get();
         if(!userVo.getCheckCode().equals(checkCode)){

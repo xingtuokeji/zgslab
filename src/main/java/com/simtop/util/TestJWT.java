@@ -7,6 +7,14 @@ import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+
 
 public class TestJWT {
     public static void main(String[] args)
@@ -15,9 +23,14 @@ public class TestJWT {
         {
             String data= "";
 //            // =================示例：解密xjwt (token也是一个xjwt);
-             String xjwt = "AAABbWITm98BAAAAAAABkFI%3D.F3uwmNO5DvjdknnsqCv6S0jNxDq2VcBzJWd9Kt%2BAigaLuxT5XV%2FOE1%2BkSWTNQ45bx%2B4On1pAg3V8vgPa125uaZckvDGhSmkMJ0Gycudkpiz0Qaf1ZgnogQt8i2WjBi%2BGgZiB1YcJpSbfLuEfeMtB48%2Buk9FF50IJENZDBqgJBh%2Fwhk5NMZ7%2FRFnGTrjw3tPP%2FOF7wihNxcCb4b8TqOVA%2BR17bzwUTQix6R5JSaJV8wGaz6ZwHbZChzVnUcOprJ48Ph52MSpk7Ik%2F02V5333yYO0CesihETlN%2FMsonp3ZVsnHd3Y8DRlcV1j9MTzb5mpC0SgS9L4xazf9fUweixjzSA%3D%3D.zGF5hJD5%2FeJnGEZsh9%2FGSG98SjgDAfR0EEkJA6f3C7c%3D";
+            String xjwt = "AAABbb4s1qYBAAAAAAABkFI%3D.f3l%2F%2FD9%2B%2B9puye3r8tOW5P32Bxvn6mJKgSrkJtPTWjDcmU0D1M0nCpxSqFA2qgSHVnPPI3Oi1s2GlNQ9mKOtMmiPaXo0fV3CakI2RE%2FsfLE%2F2nPpkmid4SQ9YzhS4EJ0Cr0Jdo3T7kY5I3mzuNEXPCtRthDk3oWgWk79xUyVF4oI31i8Wh5HAJXEmIOyT5ihADSJeVZ4a%2BUOhme7%2BAXbjmmM3Ie2737DURB1dimh7Lu32w7mgx1eUMRncMR3jxA8LFT1YVRMH8QaMENSz27LPsXikCs8QJ%2BqCARxZFuk6jj0GYJzeOhb3vRji1zjFe6BfuS%2BvwgaBbee1mG12UtSkw%3D%3D.5p7Tw8HcUW9G8AompVkEWAJI49wS7%2FgjP4N5oAgONjQ%3D";
             data = dencrty(xjwt);
-           System.out.println(data);
+            JSONObject o = JSONObject.parseObject(data);
+            String loginName = o.getString("mj");
+            String username  = o.getString("dis");
+            System.out.println(username);// 本地测试ok
+            String s = new String(username.getBytes("UTF-8"),"UTF-8");
+            System.out.println(s);
 
             // =================示例：生成xjwt
             JSONObject param=new JSONObject();
@@ -41,7 +54,7 @@ public class TestJWT {
      * @throws Exception
      */
     public static String dencrty(String xjwt) throws Exception {
-        //获取当前时间
+      //  获取当前时间
         long now = System.currentTimeMillis();
         //创建JWT实例
         JWT jwt = new JWT(Key.SecretKey, Key.AesKey,now,Key.issuerId);
@@ -49,11 +62,12 @@ public class TestJWT {
         xjwt=URLDecoder.decode(xjwt,"UTF-8");
         //解密数据
         String json = jwt.verifyAndDecrypt(xjwt,now);
+//        return dencrty(xjwt);
         return json;
     }
 
     /**
-     * 加密json数据
+     * 加密json数据 ——token
      * @param json
      * @return
      * @throws Exception
@@ -73,5 +87,29 @@ public class TestJWT {
         String xjwt = new String(out.array(),out.arrayOffset(),out.remaining());
         //对数据进行url 编码
         return URLEncoder.encode(xjwt,"UTF-8");
+    }
+}
+
+
+
+class Test {
+    public static void main(String[] args) {
+        System.out.println(System.getProperty("sun.jnu.encoding"));
+    }
+}
+
+
+class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Default Charset=" + Charset.defaultCharset());
+        System.out.println("file.encoding=" + System.getProperty("file.encoding"));
+        System.out.println("Default Charset=" + Charset.defaultCharset());
+        System.out.println("Default Charset in Use=" + getDefaultCharSet());
+    }
+
+    private static String getDefaultCharSet() {
+        OutputStreamWriter writer = new OutputStreamWriter(new ByteArrayOutputStream());
+        String enc = writer.getEncoding();
+        return enc;
     }
 }

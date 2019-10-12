@@ -13,5 +13,5 @@ public class Key {
      */
     public static final long issuerId = 102482L;
     public static final String SecretKey = "23fy1p";
-    public static String AesKey = "q2EtuuBbAWIhQlLwGqXZIXjeyflUmFnIfXWSmCvoFqI=";
+    public static final String AesKey = "q2EtuuBbAWIhQlLwGqXZIXjeyflUmFnIfXWSmCvoFqI=";
 }

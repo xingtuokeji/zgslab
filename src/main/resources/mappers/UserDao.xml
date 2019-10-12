@@ -94,5 +94,16 @@
         where id=#{id}
     </select>
 
+    <select id="findByLoginName" parameterType="string" resultType="com.simtop.pojo.User">
+        select *
+        from tb_user
+        where login_name = #{loginName}
+    </select>
+
+    <insert id="inserIlabUser" parameterType="com.simtop.pojo.User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into tb_user(username, login_name, role_id, create_time, update_time, school, province, city,email,password)
+        values (#{username},#{loginName},#{roleId},now(),now(),#{school},#{province},#{city},#{email},#{password})
+    </insert>
+
 </mapper>    
   
