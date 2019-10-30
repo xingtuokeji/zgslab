@@ -238,11 +238,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User selectUserByLoginName(String loginName) {
-        return userDao.findByLoginName(loginName);
-    }
-
-    @Override
     public int insertIlabUser(UserVo userVo) {
         User user = new User();
         user.setUsername(userVo.getUsername());
@@ -254,6 +249,16 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userVo.getPassword());
         user.setEmail(userVo.getEmail());
         return userDao.inserIlabUser(user);
+    }
+
+    @Override
+    public User selectUserByUserId(Integer id) {
+        return userDao.findById(id);
+    }
+
+    @Override
+    public User selectUserByLoginName(String loginName) {
+        return userDao.findByLoginName(loginName);
     }
 
     @Override

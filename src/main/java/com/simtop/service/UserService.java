@@ -31,7 +31,9 @@ public interface UserService {
 
     ServerResponse<User> findById(Integer id);
 
-    User selectUserByLoginName(String loginName);
-
     int insertIlabUser(UserVo userVo);
+
+    User selectUserByUserId(Integer id);
+
+    User selectUserByLoginName(String loginName);
 }
