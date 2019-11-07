@@ -54,8 +54,13 @@ public class U3DExpRecordServiceImpl implements U3DExpRecordService {
         Date createTime = experimentRecordDao.findCreateTimeByExperimentId(expRecord.getExperimentId());
         long startDate = createTime.getTime();
         //实验用时
-        int timeUsed = record.getTime()/60;
+//        int timeUsed = record.getTime()/60;
+        int timeUsed = (int)(endDate - startDate)/1000/60;
         //接入平台编号：由“实验空间”分配给实验教学项目的编号
+        System.out.println("实验开始时间："+startDate);
+        System.out.println("实验结束时间："+endDate);
+        System.out.println("实验用时："+timeUsed);
+        System.out.println("u3d传递过来的用时："+record.getTime()/60);
         String issuerId = String.valueOf(Key.issuerId);
         param.put("username",username);
         param.put("projectTitle",projectTitle);
